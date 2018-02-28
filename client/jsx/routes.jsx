@@ -2,12 +2,13 @@ import React from "react";
 import { Route } from "react-router";
 
 // import handler containers
-import Layout from "./containers/layout.jsx";
-import ColleaguesShow from "./components/colleagues/colleagues_show.jsx";
-import Search from "./containers/search.jsx";
-import StyleGuide from "./components/style_guide/style_guide.jsx";
-import ExampleContainer from "./containers/example_container.jsx";
+import Layout from './containers/layout.jsx';
+import ColleaguesShow from './components/colleagues/colleagues_show.jsx';
+import Search from './containers/search.jsx';
+import StyleGuide from './components/style_guide/style_guide.jsx';
+import Primer3 from './components/primer3/primer3.jsx';
 import CustomTreeContainer from "./containers/custom_tree_container.jsx";
+import ExampleContainer from './containers/example_container.jsx';
 
 module.exports = (
   <Route path="/" component={Layout}>
@@ -15,5 +16,6 @@ module.exports = (
     <Route path="search" component={Search} />
     <Route path="style-guide" component={StyleGuide} />
     <Route path="downloads" component={CustomTreeContainer} />
+    <Route path="primer3" component={Primer3} />
   </Route>
 );
