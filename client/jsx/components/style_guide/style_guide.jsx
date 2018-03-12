@@ -36,7 +36,7 @@ const StyleGuide = React.createClass({
           <div id='help' style={[style.sectionContainer]}>
             <h2>Help Icon</h2>
             <hr />
-            <p>Add some inline text to help users. <HelpIcon text='To do the thing you want to do, eat more vegetables.' /></p>
+            <p>Add some inline text to help users. <HelpIcon text='To do the thing you want to do *TEST*, eat more vegetables.' /></p>
           </div>
           <div id='buttons' style={[style.sectionContainer]}>
             <h2>Buttons</h2>
