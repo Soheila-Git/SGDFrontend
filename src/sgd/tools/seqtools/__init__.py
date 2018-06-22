@@ -115,8 +115,10 @@ def display_sequence_for_chr(p, data):
         content += format_gcg(data['residue']);
     else:
         content += format_fasta(data['residue']);
-        
-    filename = "chr" + _chrnum_to_chrom(data['chr']) + "_" +  start + "-" + end
+
+    filename = "chr" + _chrnum_to_chrom(data['chr'])
+    if start != 'undefined':
+        filename = filename + "_" +  start + "-" + end
 
     if p.get('format') == 'gcg':
         filename += ".gcg"
