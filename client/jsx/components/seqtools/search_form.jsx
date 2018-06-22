@@ -1012,12 +1012,7 @@ const GeneSequenceResources = React.createClass({
 		   seq = seq.toUpperCase().replace(/[^A-Z]/g, '');
 		   paramData['seq'] = seq;
                    paramData['seqtype'] = param['seqtype']
-		   console.log("seqtype="+param['seqtype']);
-		   console.log("rev3=" + param['rev3']); 
-		   if (param['seqtype'] == 'Protein') {
-		      paramData['rev'] = 0;
-		   }
-		   else if (param['rev3'] && param['rev3'] == 'on') {
+		   if (paramData['seqtype'] == 'DNA' && param['rev3'] && param['rev3'] == 'on') {
                       paramData['rev'] = 1;
                    }
 		   this.sendRequest(paramData)

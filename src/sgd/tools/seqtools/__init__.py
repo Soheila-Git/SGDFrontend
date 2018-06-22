@@ -293,6 +293,10 @@ def manipulate_sequence(p):
     seq = seq.replace(" ", "")
 
     seq = ''.join([i for i in seq if not i.isdigit()])
+    if p.get('seqtype') == 'Protein':
+        data['residue'] = seq
+        return data
+
     rev = p.get('rev')
     if rev is not None and rev == '1':
         seq = _reverse_complement(seq)
