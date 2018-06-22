@@ -785,6 +785,13 @@ const GeneSequenceResources = React.createClass({
                        return 1;     
 		   }
 		}
+		else {
+		   if (seq.match(/^[ATCGatcg]+$/g) !== null) {
+		       alert("Looks like you are entering a DNA sequence instead of PROTEIN sequence. Please pick a right sequence type and try it again.");
+                       e.preventDefault();
+                       return 1;
+		   }
+		}
 
         },
 
