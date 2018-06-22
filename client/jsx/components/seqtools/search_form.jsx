@@ -175,7 +175,7 @@ const GeneSequenceResources = React.createClass({
 	     var param = this.state.param;
 	     var rev = param['rev3'];
 
-	     if (rev == 'on') {
+	     if (rev == 'on' && param['seqtype'] == 'DNA') {
 	     	  return (<div><h3>The reverse complement of this sequence:</h3><p><textarea value={ seq } rows='7' cols='200'></textarea></p></div>);
 	     }
 	     else {
