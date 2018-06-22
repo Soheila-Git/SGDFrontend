@@ -235,6 +235,7 @@ def validate_names(p):
         badList = ""
         for name in names:
             gene = name
+            name = name.upper()
             name = name.replace("SGD:", "")
             url = validate_url + name
             res =_check_gene_from_server(url)
@@ -255,12 +256,12 @@ def get_sequence_for_chr(p):
     strand = '+'
     start = p.get('start')
     end = p.get('end')
-    if start is not None:
+    if start is not None and start != 'undefined':
         data["start"] = start
         start = int(start)
     else:
         start = 1
-    if end is not None:
+    if end is not None and end != 'undefined':
         data["end"] =end
         end = int(end)
     else:
@@ -344,7 +345,7 @@ def get_sequence_for_genes(p):
     data = {}
 
     for name in genes:
-
+        name = name.upper()
         name = name.replace("SGD:", "")
         url = seq_url.replace("_REPLACE_NAME_HERE_", name)
         res = _get_json_from_server(url)        
