@@ -766,8 +766,8 @@ const GeneSequenceResources = React.createClass({
 
 	onSubmit3(e) {
 
-                var seq = this.refs.seq.value.trim();
-		seq = seq.replace(/DA/g, "");
+                // var seq = this.refs.seq.value.trim();
+		var seq = this.refs.seq.value;
 		seq = seq.replace(/[^A-Za-z]/g, "");	
                 if (seq == '') {
                    alert("Please enter a raw sequence.");
