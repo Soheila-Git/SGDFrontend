@@ -792,13 +792,6 @@ const GeneSequenceResources = React.createClass({
                        return 1;
 		   }
 
-		   var rev3 = this.refs.rev3.value.trim();
-                   if (rev3 != '') {
-		        alert("Looks like you are entering a PROTEIN sequence. Please unselect the 'Use the reverse complement' checkbox and try it again.");
-                       e.preventDefault();
-                       return 1;
-                   }
-
 		}
 
         },
@@ -901,12 +894,17 @@ const GeneSequenceResources = React.createClass({
 
 	getReverseCompNode(name) {
 
-		// <p><input ref={name} name={name} id={name} type="checkbox" value={this.state.rev} onChange={this.onChangeCB}/> Use the reverse complement</p>
+		if (name == 'rev3') {	
+		    return (<div>
+                       	      <p><input ref={name} name={name} id={name} type="checkbox" onChange={this.onChange}/> Use the reverse complement (for DNA sequence only)</p>
+		            </div>);
+		}
+		else {	
+	             return (<div>
+		       	      <p><input ref={name} name={name} id={name} type="checkbox" onChange={this.onChange}/> Use the reverse complement</p> 
+		             </div>);
 
-	        return (<div>
-		       <p><input ref={name} name={name} id={name} type="checkbox" onChange={this.onChange}/> Use the reverse complement</p> 
-		       </div>);
-
+	        }
         },
 
 	getStrainPulldown(strains) {
