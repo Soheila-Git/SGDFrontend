@@ -1103,7 +1103,7 @@ const GeneSequenceResources = React.createClass({
 	     var text = "The current selection is: ";
 	     
 	     var num2chrMapping = GSR.NumToRoman();    
-	     if (if (typeof(data['start']) == "undefined") {
+	     if (if (typeof(data['start'])) == "undefined") {
 	     	  text += "<font color='red'>chromosome " + num2chrMapping[chrnum] + "</font>";
 	     }
 	     else {
