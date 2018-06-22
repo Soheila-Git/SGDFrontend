@@ -791,6 +791,13 @@ const GeneSequenceResources = React.createClass({
                        e.preventDefault();
                        return 1;
 		   }
+		   
+		   var rev3 = this.refs.rev3.value.trim();
+		   if (rev3 && rev3 == 'on') {
+		       alert("Looks like you are entering a PROTEIN sequence. Please unselect the 'Use reverse complement' checkbox and try it again.");
+                       e.preventDefault();
+                       return 1;
+		   }		   
 
 		}
 
