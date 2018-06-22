@@ -153,7 +153,7 @@ const GeneSequenceResources = React.createClass({
 		var _nameSection = { headers: [[<span style={ style.textFont }><a name='gene'>1. Search a list of genes</a></span>, '']],
 			    	     rows:    [[geneNodeLeft, geneNodeRight]] };
 				     
-		var _chrSeqSection = { headers: [[<span style={ style.textFont }><strong style={{ color: 'red'}}>OR</strong> <a name='chr'>2. Search a specified chromosomal region</a></span>, '', '', <span style={ style.textFont }><strong style={{ color: 'red'}}>OR</strong> <a name='seq'>3. Analyze a raw DNA or Protein sequence</a></span>]],
+		var _chrSeqSection = { headers: [[<span style={ style.textFont }><strong style={{ color: 'red'}}>OR</strong> <a name='chr'>2. Search a specified chromosomal region of S288C reference genome</a></span>, '', '', <span style={ style.textFont }><strong style={{ color: 'red'}}>OR</strong> <a name='seq'>3. Analyze a raw DNA or Protein sequence</a></span>]],
                                        rows:    [[chrNode, '', '', seqNode]] };
 					
 		return (<div>
@@ -230,7 +230,7 @@ const GeneSequenceResources = React.createClass({
 		// browser row
 
                 var browserRow = [<span style={ style.textFont }>Genome Display (S288C)</span>];
-                var url = "https://browse.yeastgenome.org/?loc=" + chr + ":" + start + ".." + end;;
+                var url = "https://browse.yeastgenome.org/?loc=" + chr + ":" + start + ".." + end;
                 browserRow.push(<span style={ style.textFont }><a href={ url } target='infowin2'>JBrowse</a></span>);
                 rows.push(browserRow);
 
