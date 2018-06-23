@@ -318,7 +318,7 @@ const GeneSequenceResources = React.createClass({
 		    var chr = chrCoords['chr'];
 		    var start = chrCoords['start'];
 		    var end = chrCoords['end'];
-                    # var url = "https://browse.yeastgenome.org/?loc=" + gene;
+                    // var url = "https://browse.yeastgenome.org/?loc=" + gene;
 		    var url = "https://browse.yeastgenome.org/?loc=chr" + chr + ":" + start + ".." + end + "&tracks=All%20Annotated%20Sequence%20Features%2CProtein-Coding-Genes%2CDNA&highlight="; 
                     browserRow.push(<span style={ style.textFont }><a href={ url } target='infowin2'>JBrowse</a></span>);
                 });
