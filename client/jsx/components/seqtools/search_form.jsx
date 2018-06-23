@@ -655,12 +655,12 @@ const GeneSequenceResources = React.createClass({
 		      hasGenomic4gene[gene] = 0;
                       _.map(seqTypes, seqType => {
 			     if (seqType == 'chr_coords') {
-			     	 chrCoords4gene[gene] = seqInfo[seqType];
-				 continue;  
+			     	chrCoords4gene[gene] = seqInfo[seqType];
 			     }
-                             var strainInfo = seqInfo[seqType];
-                             var strains = Object.keys(strainInfo);
-                             _.map(strains, strain => {
+			     else {
+                             	var strainInfo = seqInfo[seqType];
+                             	var strains = Object.keys(strainInfo);
+                             	_.map(strains, strain => {
                                     var strainDetails = strainInfo[strain];
                                     if (typeof(displayName4gene[gene]) == "undefined") {
                                         var display_name = strainDetails['display_name'];
@@ -687,8 +687,8 @@ const GeneSequenceResources = React.createClass({
                                          genomicSeq4strain[strain] = strainDetails['residue'];
 					 hasGenomic4gene[gene] += 1;
                                     }
-				    
-                             })
+				})    
+                             }
 
                       })
 
