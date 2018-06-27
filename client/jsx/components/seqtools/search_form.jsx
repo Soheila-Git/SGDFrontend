@@ -730,8 +730,6 @@ const GeneSequenceResources = React.createClass({
 		    }
 		}
 
-		alert("secondSet="+secondSet);
-
 		if (firstSet == '') {
                    alert("Please enter one or more gene names.");
                    e.preventDefault();
@@ -741,6 +739,9 @@ const GeneSequenceResources = React.createClass({
 		var moreLinkQueryStr = "";
 		if (secondSet != "") {
 		     var qstr = location.search.substring(1);
+
+		     alert("qstr="+qstr);
+
 		     var qstrList = qstr.split('&');
 		     for (var i = 0; i < qstrList.length; i++) { 
 		     	  var pair = qstrList[i].split("=");
