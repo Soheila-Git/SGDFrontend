@@ -711,13 +711,49 @@ const GeneSequenceResources = React.createClass({
 		var re = /\+/g;
 		genes = genes.replace(re, " ");		
 		var re = / +/g;
-		genes = genes.replace(re, "|");
-		if (genes == '') {
-		   alert("Please enter one or more gene names.");
-		   e.preventDefault();
-                   return 1;
+
+		var geneList = genes.split(' ');
+		var firstSet = "";
+		var secondSet = "";
+		for (var i = 0; i < geneList.length; i++) {
+		    if (i < 5) {
+		         if (i >= 1) {
+		       	      firstSet += "|";
+		         }
+		         firstSet += geneList[i];
+		    }
+		    else {
+		    	 if (i > 5) {
+			      secondSet += "+";
+			 }
+			 secondSet += geneList[i];
+		    }
 		}
 
+		if (firstSet == '') {
+                   alert("Please enter one or more gene names.");
+                   e.preventDefault();
+                   return 1;
+                }
+		
+		var moreLinkQueryStr = "";
+		if (secondSet != "") {
+		     var qstr = location.search.substring(1);
+		     var qstrList = qstr.split('&');
+		     for (var i = 0; i < qstrList.length; i++) { 
+		     	  var pair = qstrList[i].split("=");
+			  if (moreLinkQueryStr != "") {
+                              moreLinkQueryStr += "&";
+                          }
+			  if (pair[0] == 'genes') {
+			      moreLinkQueryStr += "genes=" + secondSet;		     
+			  }
+			  else {
+			      moreLinkQueryStr += qstrList[i]; 
+			  }
+		     }
+		}
+	
 		// this.setState({ notFound: "" });
 		// this.validateGenes(genes);		
 		// var not_found = this.state.notFound;
@@ -754,8 +790,9 @@ const GeneSequenceResources = React.createClass({
 		}	
 	
 		window.localStorage.clear();
-                window.localStorage.setItem("genes", genes);
+                window.localStorage.setItem("genes", firstSet);
                 window.localStorage.setItem("strains", strains);
+		window.localStorage.setItem("moreLinkQuery", moreLinkQueryStr);
 
 	},
 
@@ -1087,9 +1124,19 @@ const GeneSequenceResources = React.createClass({
 	     var rev = param['rev1'];
 	     var up = param['up'];
 	     var down = param['down'];
+	     var moreLinkQueryStr = paramData['genes'] = window.localStorage.getItem("moreLinkQuery");
 
-       	     var text = "The currently selected gene(s)/sequence(s) are ";
+	     var text = "";
+	     if (moreLinkQueryStr != "") {
+	     	  text = "The currently displayed gene(s)/sequence(s) are ";
+	     } else {
+	          text = "The currently selected gene(s)/sequence(s) are ";
+	     }  
 	     text += "<font color='red'>" + geneList + "</font>";
+	     if (moreLinkQueryStr != "") {
+	     	 text += "<br><a href='/seqTools?" + moreLinkQueryStr + "' target='more'>Search for rest of the gene(s)</a></br>"
+	     }
+
 	     if (up && down) {
 	     	  text += " <b>plus " + up + " basepair(s) of upstream sequence and " + down + " basepair(s) of downstream sequence.</b>";
 	     }
