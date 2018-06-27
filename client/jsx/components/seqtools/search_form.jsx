@@ -1156,14 +1156,14 @@ const GeneSequenceResources = React.createClass({
 	     var secondSetGenes = window.localStorage.getItem("secondSet");
 
 	     var text = "";
-	     if (secondSet != "") {
+	     if (secondSetGenes != "") {
 	     	  text = "The currently displayed gene(s)/sequence(s) are ";
 	     } else {
 	          text = "The currently selected gene(s)/sequence(s) are ";
 	     }  
 	     text += "<font color='red'>" + geneList + "</font>";
-	     if (secondSet != "") {
-	     	 var moreLinkQueryStr = "genes=" + secondSet;
+	     if (secondSetGenes != "") {
+	     	 var moreLinkQueryStr = "genes=" + secondSetGenes;
 		 moreLinkQueryStr += "&strains=" + param['strains'];
 		 if (typeof(param['rev1']) != "undefined") {
 		      moreLinkQueryStr += "&rev1=" + param['rev'];
