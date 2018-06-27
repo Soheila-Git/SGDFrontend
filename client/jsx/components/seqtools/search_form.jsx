@@ -3,6 +3,7 @@ import _ from 'underscore';
 import $ from 'jquery';
 
 const DataTable = require("../widgets/data_table.jsx");
+const Params = require("../mixins/parse_url_params.jsx");
 const GSR = require("./gsr_helpers.jsx");
 
 const style = {
@@ -16,7 +17,7 @@ const GeneSequenceResources = React.createClass({
 
 	getInitialState() {
 	        
-		var [param, queryStr] = this.getParams();
+		var param = Params.getParams();
 		return {
 			isComplete: false,
 			isPending: false,
@@ -721,8 +722,6 @@ const GeneSequenceResources = React.createClass({
                    }
                 }
 
-		alert("Hello queryStr=" + queryStr);
-
                 return [paramDict, queryStr];
 
 	},
@@ -759,28 +758,31 @@ const GeneSequenceResources = React.createClass({
                    return 1;
                 }
 		
-		var moreLinkQueryStr = "";
-		if (secondSet != "") {
-		     var qstr = this.state.queryStr;
+		
 
-		     alert("qstr="+qstr);
+		// var moreLinkQueryStr = "";
+		// if (secondSet != "") {
 
-		     var qstrList = qstr.split('&');
-		     for (var i = 0; i < qstrList.length; i++) { 
-		     	  var pair = qstrList[i].split("=");
-			  if (moreLinkQueryStr != "") {
-                              moreLinkQueryStr += "&";
-                          }
-			  if (pair[0] == 'genes') {
-			      moreLinkQueryStr += "genes=" + secondSet;		     
-			  }
-			  else {
-			      moreLinkQueryStr += qstrList[i]; 
-			  }
-		     }
-		}
+		//     var qstr = this.state.queryStr;
 
-		alert("moreLinkQueryStr="+moreLinkQueryStr);
+		//     alert("qstr="+qstr);
+
+		//     var qstrList = qstr.split('&');
+		//     for (var i = 0; i < qstrList.length; i++) { 
+		//     	  var pair = qstrList[i].split("=");
+		//	  if (moreLinkQueryStr != "") {
+                //             moreLinkQueryStr += "&";
+                //          }
+		//	  if (pair[0] == 'genes') {
+		//	      moreLinkQueryStr += "genes=" + secondSet;		     
+		//	  }
+		//	  else {
+		//	      moreLinkQueryStr += qstrList[i]; 
+		//	  }
+		//     }
+		//}
+
+		// alert("moreLinkQueryStr="+moreLinkQueryStr);
 	
 		// this.setState({ notFound: "" });
 		// this.validateGenes(genes);		
@@ -820,7 +822,7 @@ const GeneSequenceResources = React.createClass({
 		window.localStorage.clear();
                 window.localStorage.setItem("genes", firstSet);
                 window.localStorage.setItem("strains", strains);
-		window.localStorage.setItem("moreLinkQuery", moreLinkQueryStr);
+		window.localStorage.setItem("secondSet", secondSet);
 
 	},
 
@@ -1152,16 +1154,29 @@ const GeneSequenceResources = React.createClass({
 	     var rev = param['rev1'];
 	     var up = param['up'];
 	     var down = param['down'];
-	     var moreLinkQueryStr = window.localStorage.getItem("moreLinkQuery");
+	     var secondSetGenes = window.localStorage.getItem("secondSet");
 
 	     var text = "";
-	     if (moreLinkQueryStr != "") {
+	     if (secondSet != "") {
 	     	  text = "The currently displayed gene(s)/sequence(s) are ";
 	     } else {
 	          text = "The currently selected gene(s)/sequence(s) are ";
 	     }  
 	     text += "<font color='red'>" + geneList + "</font>";
-	     if (moreLinkQueryStr != "") {
+	     if (secondSet != "") {
+	     	 var moreLinkQueryStr = "genes=" + secondSet;
+		 moreLinkQueryStr += "&strains=" + param['strains'];
+		 if (typeof(param['rev1']) != "undefined") {
+		      moreLinkQueryStr += "&rev1=" + param['rev'];
+		 }		 
+		 if (typeof(param['up']) != "undefined") {
+                      moreLinkQueryStr += "&up=" + param['up'];
+                 }
+		 if (typeof(param['down']) != "undefined") {
+                      moreLinkQueryStr += "&down=" + param['down'];
+                 }
+		 moreLinkQueryStr += "&submit=Submit+Form";
+		 
 	     	 text += "<br><a href='/seqTools?" + moreLinkQueryStr + "' target='more'>Search for rest of the gene(s)</a></br>"
 	     }
 
