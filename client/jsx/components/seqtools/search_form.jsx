@@ -1017,12 +1017,15 @@ const GeneSequenceResources = React.createClass({
 		        var [firstSet, secondSet] = this.checkGenes(param['genes']);
 			window.localStorage.setItem("secondSet", secondSet);
 			paramData['genes'] = firstSet;
-			paramData['strains'] = param['strains'];		     
+			console.log("firstSet="+firstSet);
+			console.log("secondSet="+secondSet);
+			
 		   }
 		   else {
 		   	paramData['genes'] = window.localStorage.getItem("genes");
-		   	paramData['strains'] = window.localStorage.getItem("strains");
 	           }
+		   
+		   paramData['strains'] = window.localStorage.getItem("strains");
 
 		   if (param['up']) {		   
 		      paramData['up'] = param['up'];
