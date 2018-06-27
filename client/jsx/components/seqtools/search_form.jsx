@@ -171,16 +171,15 @@ const GeneSequenceResources = React.createClass({
 
 	getComplementBox(seq) {
 
-	     var param = this.state.param;
-	     var rev = param['rev3'];
+	        var param = this.state.param;
+	        var rev = param['rev3'];
 
-	     if (rev == 'on' && param['seqtype'] == 'DNA') {
-	     	  return (<div><h3>The reverse complement of this sequence:</h3><p><textarea value={ seq } rows='7' cols='200'></textarea></p></div>);
-	     }
-	     else {
-	     	  return (<div></div>);
-	     }
-
+	        if (rev == 'on' && param['seqtype'] == 'DNA') {
+	     	      return (<div><h3>The reverse complement of this sequence:</h3><p><textarea value={ seq } rows='7' cols='200'></textarea></p></div>);
+	        }
+	        else {
+	     	      return (<div></div>);
+	        }
 	},
 
 	getResultTable4seq(seq) {
@@ -702,54 +701,40 @@ const GeneSequenceResources = React.createClass({
 			  
 	},
 
-	getParams() {
+	checkGenes(genes) {
+		
+		genes = genes.replace(/[^A-Za-z:\-0-9]/g, ' ');
+                var re = /\+/g;
+                genes = genes.replace(re, " ");
+                var re = / +/g;
 
-		var queryStr = location.search.substring(1);
-                var paramDict = {};
-                if (queryStr) {
-                   var params = queryStr.split('&');
-                   for (var i = 0; i < params.length; i++) {
-                       var pair = params[i].split('=');
-                       var key = pair[0];
-                       var value = pair[1].replace(/\+/g, ' ');
-                       if (paramDict[key]) {
-                            paramDict[key] = paramDict[key] + ' ' + value;
-                       }
-                       else {
-                            paramDict[key] = value;
-                       }
-                   }
+                var geneList = genes.split(' ');
+                var firstSet = "";
+                var secondSet = "";
+                for (var i = 0; i < geneList.length; i++) {
+                    if (i < 5) {
+                         if (i >= 1) {
+                              firstSet += "|";
+                         }
+                         firstSet += geneList[i];
+                    }
+                    else {
+                         if (i > 5) {
+                              secondSet += "+";
+                         }
+                         secondSet += geneList[i];
+                    }
                 }
-
-                return [paramDict, queryStr];
+		
+		return [firstSet, secondSet];
 
 	},
 
 	onSubmit(e) {
 		
 		var genes = this.refs.genes.value.trim();
-		genes = genes.replace(/[^A-Za-z:\-0-9]/g, ' ');
-		var re = /\+/g;
-		genes = genes.replace(re, " ");		
-		var re = / +/g;
-
-		var geneList = genes.split(' ');
-		var firstSet = "";
-		var secondSet = "";
-		for (var i = 0; i < geneList.length; i++) {
-		    if (i < 5) {
-		         if (i >= 1) {
-		       	      firstSet += "|";
-		         }
-		         firstSet += geneList[i];
-		    }
-		    else {
-		    	 if (i > 5) {
-			      secondSet += "+";
-			 }
-			 secondSet += geneList[i];
-		    }
-		}
+		
+		var [firstSet, secondSet] = this.checkGenes(genes);
 
 		if (firstSet == '') {
                    alert("Please enter one or more gene names.");
@@ -757,32 +742,6 @@ const GeneSequenceResources = React.createClass({
                    return 1;
                 }
 		
-		
-
-		// var moreLinkQueryStr = "";
-		// if (secondSet != "") {
-
-		//     var qstr = this.state.queryStr;
-
-		//     alert("qstr="+qstr);
-
-		//     var qstrList = qstr.split('&');
-		//     for (var i = 0; i < qstrList.length; i++) { 
-		//     	  var pair = qstrList[i].split("=");
-		//	  if (moreLinkQueryStr != "") {
-                //             moreLinkQueryStr += "&";
-                //          }
-		//	  if (pair[0] == 'genes') {
-		//	      moreLinkQueryStr += "genes=" + secondSet;		     
-		//	  }
-		//	  else {
-		//	      moreLinkQueryStr += qstrList[i]; 
-		//	  }
-		//     }
-		//}
-
-		// alert("moreLinkQueryStr="+moreLinkQueryStr);
-	
 		// this.setState({ notFound: "" });
 		// this.validateGenes(genes);		
 		// var not_found = this.state.notFound;
@@ -1054,8 +1013,16 @@ const GeneSequenceResources = React.createClass({
 
 		if (searchType == 'genes') {
 
-		   paramData['genes'] = window.localStorage.getItem("genes");
-		   paramData['strains'] = window.localStorage.getItem("strains");
+		   if (param['more'] == 1) {
+		        var [firstSet, secondSet] = this.checkGenes(param['genes']);
+			window.localStorage.setItem("secondSet");
+			paramData['genes'] = firstSet;
+			paramData['strains'] = param['strains'];		     
+		   }
+		   else {
+		   	paramData['genes'] = window.localStorage.getItem("genes");
+		   	paramData['strains'] = window.localStorage.getItem("strains");
+	           }
 
 		   if (param['up']) {		   
 		      paramData['up'] = param['up'];
@@ -1174,7 +1141,7 @@ const GeneSequenceResources = React.createClass({
 		 if (typeof(param['down']) != "undefined") {
                       moreLinkQueryStr += "&down=" + param['down'];
                  }
-		 moreLinkQueryStr += "&submit=Submit+Form";
+		 moreLinkQueryStr += "&submit=Submit+Form&more=1";
 		 
 	     	 text += "<br><a href='/seqTools?" + moreLinkQueryStr + "' target='more'>Search for rest of the gene(s)</a></br>"
 	     }
