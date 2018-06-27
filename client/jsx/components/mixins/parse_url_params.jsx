@@ -5,6 +5,7 @@ module.exports = {
 	getParams: function() {
 
 		var queryStr = location.search.substring(1);
+		window.localStorage.setItem("queryStr", queryStr);
                 var paramDict = {};
                 if (queryStr) {
                    var params = queryStr.split('&');
