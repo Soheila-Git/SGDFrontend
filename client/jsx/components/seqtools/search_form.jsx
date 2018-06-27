@@ -3,7 +3,6 @@ import _ from 'underscore';
 import $ from 'jquery';
 
 const DataTable = require("../widgets/data_table.jsx");
-const Params = require("../mixins/parse_url_params.jsx");
 const GSR = require("./gsr_helpers.jsx");
 
 const style = {
@@ -17,7 +16,7 @@ const GeneSequenceResources = React.createClass({
 
 	getInitialState() {
 	        
-		var param = Params.getParams();
+		var [param, queryStr] = this.getParams();
 		return {
 			isComplete: false,
 			isPending: false,
@@ -25,7 +24,8 @@ const GeneSequenceResources = React.createClass({
 			strain: '',
 			resultData: {},
 			notFound: null,
-			param: param
+			param: param,
+			queryStr: queryStr
 		};
 	},
 
@@ -702,6 +702,27 @@ const GeneSequenceResources = React.createClass({
 			  
 	},
 
+	getParams() {
+
+		var queryStr = location.search.substring(1);
+                var paramDict = {};
+                if (queryStr) {
+                   var params = queryStr.split('&');
+                   for (var i = 0; i < params.length; i++) {
+                       var pair = params[i].split('=');
+                       var key = pair[0];
+                       var value = pair[1].replace(/\+/g, ' ');
+                       if (paramDict[key]) {
+                            paramDict[key] = paramDict[key] + ' ' + value;
+                       }
+                       else {
+                            paramDict[key] = value;
+                       }
+                   }
+                }
+                return [paramDict, queryStr];
+
+	},
 
 	onSubmit(e) {
 		
@@ -737,7 +758,7 @@ const GeneSequenceResources = React.createClass({
 		
 		var moreLinkQueryStr = "";
 		if (secondSet != "") {
-		     var qstr = window.localStorage.getItem("queryStr");
+		     var qstr = this.state.queryStr;
 
 		     alert("qstr="+qstr);
 
