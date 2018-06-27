@@ -753,6 +753,8 @@ const GeneSequenceResources = React.createClass({
 			  }
 		     }
 		}
+
+		alert("moreLinkQueryStr="+moreLinkQueryStr);
 	
 		// this.setState({ notFound: "" });
 		// this.validateGenes(genes);		
