@@ -25,8 +25,7 @@ const GeneSequenceResources = React.createClass({
 			strain: '',
 			resultData: {},
 			notFound: null,
-			param: param,
-			queryStr: queryStr
+			param: param
 		};
 	},
 
