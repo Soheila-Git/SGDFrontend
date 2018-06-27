@@ -720,6 +720,9 @@ const GeneSequenceResources = React.createClass({
                        }
                    }
                 }
+
+		alert("Hello queryStr=" + queryStr);
+
                 return [paramDict, queryStr];
 
 	},
