@@ -1017,9 +1017,6 @@ const GeneSequenceResources = React.createClass({
 		        var [firstSet, secondSet] = this.checkGenes(param['genes']);
 			window.localStorage.setItem("secondSet", secondSet);
 			paramData['genes'] = firstSet;
-			console.log("firstSet="+firstSet);
-			console.log("secondSet="+secondSet);
-			
 		   }
 		   else {
 		   	paramData['genes'] = window.localStorage.getItem("genes");
@@ -1146,7 +1143,7 @@ const GeneSequenceResources = React.createClass({
                  }
 		 moreLinkQueryStr += "&submit=Submit+Form&more=1";
 		 
-	     	 text += "<br><a href='/seqTools?" + moreLinkQueryStr + "' target='more'>Search for rest of the gene(s)</a></br>"
+	     	 text += "<br><a href='/seqTools?" + moreLinkQueryStr + "'>Search for rest of the gene(s)</a></br>"
 	     }
 
 	     if (up && down) {
