@@ -730,6 +730,8 @@ const GeneSequenceResources = React.createClass({
 		    }
 		}
 
+		alert("secondSet="+secondSet);
+
 		if (firstSet == '') {
                    alert("Please enter one or more gene names.");
                    e.preventDefault();
