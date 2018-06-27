@@ -1124,7 +1124,7 @@ const GeneSequenceResources = React.createClass({
 	     var rev = param['rev1'];
 	     var up = param['up'];
 	     var down = param['down'];
-	     var moreLinkQueryStr = paramData['genes'] = window.localStorage.getItem("moreLinkQuery");
+	     var moreLinkQueryStr = window.localStorage.getItem("moreLinkQuery");
 
 	     var text = "";
 	     if (moreLinkQueryStr != "") {
