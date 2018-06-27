@@ -1015,7 +1015,7 @@ const GeneSequenceResources = React.createClass({
 
 		   if (param['more'] == 1) {
 		        var [firstSet, secondSet] = this.checkGenes(param['genes']);
-			window.localStorage.setItem("secondSet");
+			window.localStorage.setItem("secondSet", secondSet);
 			paramData['genes'] = firstSet;
 			paramData['strains'] = param['strains'];		     
 		   }
