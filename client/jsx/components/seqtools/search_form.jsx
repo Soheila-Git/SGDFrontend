@@ -18,7 +18,7 @@ const GeneSequenceResources = React.createClass({
 	getInitialState() {
 	        
 		var param = Params.getParams();
-		
+		var qstr = location.search.substring(1);
 		return {
 			isComplete: false,
 			isPending: false,
@@ -26,7 +26,8 @@ const GeneSequenceResources = React.createClass({
 			strain: '',
 			resultData: {},
 			notFound: null,
-			param: param
+			param: param,
+			queryStr: qstr
 		};
 	},
 
@@ -738,7 +739,7 @@ const GeneSequenceResources = React.createClass({
 		
 		var moreLinkQueryStr = "";
 		if (secondSet != "") {
-		     var qstr = location.search.substring(1);
+		     var qstr = this.state.queryStr;
 
 		     alert("qstr="+qstr);
 
