@@ -386,10 +386,11 @@ def get_sequence_for_genes(p):
                                                                        up, down, rev)
                 allSeqData['genomic_dna'] = genomicData
 
-            [start, end, chr] = _extract_chr_coordinates(res['genomic_dna'])
+            [start, end, chr, type] = _extract_chr_coordinates(res['genomic_dna'])
             allSeqData['chr_coords'] = { "start": start, 
                                          "end": end, 
-                                         "chr": chr }
+                                         "chr": chr,
+                                         "locus_type": type}
         if format_name is not None:
             data[format_name] = allSeqData
 
@@ -408,7 +409,9 @@ def _extract_chr_coordinates(rows):
             start = row['start']
             end = row['end']
             chr = row['contig']['display_name'].replace("Chromosome ", "")
-    return [start, end, chr]
+            locus = row['locus']
+
+    return [start, end, chr, locus['locus_type']]
 
 
 def _extract_seq(strains, rows, rev):

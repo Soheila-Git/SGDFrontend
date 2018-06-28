@@ -287,7 +287,7 @@ const GeneSequenceResources = React.createClass({
 		_.map(genes, gene => { 
 		    var sgdUrl = "https://www.yeastgenome.org/locus/" + sgdid4gene[gene];
 		    var allianceUrl = "http://www.alliancegenome.org/gene/" + sgdid4gene[gene];
-		    locusRow.push(<span style={ style.textFont }><a href={ sgdUrl } target='infowin2'>SGD</a> | <a href={ allianceUrl } target='infowin2'>Alliance</a></span>);
+		    locusRow.push(<span style={ style.textFont }><a href={ sgdUrl } target='infowin2'>SGD</a> | <a href={ allianceUrl } target='infowin2'>Alliance</a></span>); 
 		});	
 		rows.push(locusRow);
 
@@ -305,7 +305,7 @@ const GeneSequenceResources = React.createClass({
                 var hasSeq = hasProtein + hasCoding + hasGenomic;
 		    
 		if (hasSeq == 0) {
-		     return this.display_gene_table(headerRow, rows)
+		     return (<div>No sequence for selected genes</div>);
 		}    
 
 	        // browser row
@@ -316,7 +316,6 @@ const GeneSequenceResources = React.createClass({
 		    var chr = chrCoords['chr'];
 		    var start = chrCoords['start'];
 		    var end = chrCoords['end'];
-                    // var url = "https://browse.yeastgenome.org/?loc=" + gene;
 		    var url = "https://browse.yeastgenome.org/?loc=chr" + chr + ":" + start + ".." + end + "&tracks=All%20Annotated%20Sequence%20Features%2CProtein-Coding-Genes%2CDNA&highlight="; 
                     browserRow.push(<span style={ style.textFont }><a href={ url } target='infowin2'>JBrowse</a></span>);
                 });
@@ -325,14 +324,26 @@ const GeneSequenceResources = React.createClass({
 		// alignment row
 
 		var alignRow = [<span style={ style.textFont }>Alignment/Variation</span>];
+		var hasRow = 0;
 		_.map(genes, gene => {
-		     var variantUrl = "https://www.yeastgenome.org/variant-viewer#/" + sgdid4gene[gene].replace("SGD:", "");
-		     var strainUrl = "https://www.yeastgenome.org/cgi-bin/FUNGI/alignment.pl?locus=" + gene;
-		     var fungalUrl = "https://www.yeastgenome.org/cache/fungi/" + gene + ".html";
-		     alignRow.push(<span style={ style.textFont }><br><a href={ variantUrl } target='infowin2'>Variant Viewer</a></br><br><a href={ strainUrl } target='infowin2'>Strain Alignment</a></br><br><a href={ fungalUrl } target='infowin2'>Fungal Alignment</a></br></span>);
+		     var chrCoords = chrCoords4gene[gene];
+                     var locus_type = chrCoords['locus_type'];
+		     
+		     if (locus_type == 'ORF') {
+		     	  var variantUrl = "https://www.yeastgenome.org/variant-viewer#/" + sgdid4gene[gene].replace("SGD:", "");
+		     	  var strainUrl = "https://www.yeastgenome.org/cgi-bin/FUNGI/alignment.pl?locus=" + gene;
+		     	  var fungalUrl = "https://www.yeastgenome.org/cache/fungi/" + gene + ".html";
+		     	  alignRow.push(<span style={ style.textFont }><br><a href={ variantUrl } target='infowin2'>Variant Viewer</a></br><br><a href={ strainUrl } target='infowin2'>Strain Alignment</a></br><br><a href={ fungalUrl } target='infowin2'>Fungal Alignment</a></br></span>);	
+			  hasRow = hasRow + 1;		
+		     }
+		     else {
+		     	  alignRow.push(<span> - </span>);
+		     }
 		});
-		rows.push(alignRow);
-		
+		if (hasRow > 0) {
+		     rows.push(alignRow);
+		}
+
 		// sequence download row
 		
 		var seqDLRow = [];
@@ -370,8 +381,14 @@ const GeneSequenceResources = React.createClass({
                     var	codingGcgUrl = SeqtoolsUrl + "?format=gcg&type=coding" + queryStr + extraParams;
 		    var proteinFastaUrl = SeqtoolsUrl + "?format=fasta&type=protein" + queryStr + extraParams;
                     var	proteinGcgUrl = SeqtoolsUrl + "?format=gcg&type=protein" + queryStr + extraParams;
-		    if (hasCoding > 0) {
+		    var hasCoding = hasCoding4gene[gene];
+		    var hasProtein = hasProtein4gene[gene];
+		    var hasGenomic = hasGenomic4gene[gene]; 
+		    if (hasProtein > 0) {
 		         seqDLRow.push(<span style={ style.textFont}><br></br><br><a href={ genomicFastaUrl } target='infowin'>Fasta</a> | <a href={ genomicGcgUrl } target='infowin'>GCG</a></br><br><a href={ codingFastaUrl } target='infowin'>Fasta</a> | <a href={ codingGcgUrl } target='infowin'>GCG</a></br><br><a href={ proteinFastaUrl } target='infowin'>Fasta</a> | <a href={ proteinGcgUrl } target='infowin'>GCG</a></br></span>);
+		    }
+		    else if (hasCoding) {
+		    	 seqDLRow.push(<span style={ style.textFont}><br></br><br><a href={ genomicFastaUrl } target='infowin'>Fasta</a> | <a href={ genomicGcgUrl } target='infowin'>GCG</a></br><br><a href={ codingFastaUrl } target='infowin'>Fasta</a> | <a href={ codingGcgUrl } target='infowin'>GCG</a></br></span>);
 		    }
 		    else {
 		    	 seqDLRow.push(<span style={ style.textFont }><br></br><br><a href={ genomicFastaUrl } target='infowin'>Fasta</a> | <a href={ genomicGcgUrl } target='infowin'>GCG</a></br></span>);
@@ -637,6 +654,7 @@ const GeneSequenceResources = React.createClass({
 		var genes = Object.keys(data).sort();
 		var displayName4gene = {};
 		var sgdid4gene = {};
+		var featureType4gene = {};
 		var hasProtein4gene = {};
 		var hasCoding4gene = {};
 		var hasGenomic4gene = {};
@@ -671,7 +689,6 @@ const GeneSequenceResources = React.createClass({
 					sgdid4gene[gene] = strainDetails['sgdid'];
                                     }
 				    // var headline = strainDetails['headline'];
-				    // var locus_type = strainDetails['locus_type'];
 				    
                                     if (seqType == 'protein') {
                                          proteinSeq4strain[strain] = strainDetails['residue'];
