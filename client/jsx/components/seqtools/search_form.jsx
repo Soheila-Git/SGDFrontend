@@ -1180,7 +1180,7 @@ const GeneSequenceResources = React.createClass({
 	     var hasSeqSet = geneList.split(',');
 	     
 	     if (hasSeqSet.length < pickedSet.length) {
-		 text += "<br>No sequence available for the other gene(s)/feature(s) in this gene set in the selected strain(s).</br>"
+		 text += "<p>No sequence available for the other gene(s)/feature(s) in this gene set in the selected strain(s).</p>"
 	     }
 	     
 	     if (secondSetGenes != "") {
@@ -1197,7 +1197,7 @@ const GeneSequenceResources = React.createClass({
                  }
 		 moreLinkQueryStr += "&submit=Submit+Form&more=1";
 		 
-	     	 text += "<br><a href='/seqTools?" + moreLinkQueryStr + "'>Display next set of the gene(s)</a></br>"
+	     	 text += "<p><a href='/seqTools?" + moreLinkQueryStr + "'>Display next set of the gene(s)</a></p>"
 	     }
 
 	     if (up && down) {
