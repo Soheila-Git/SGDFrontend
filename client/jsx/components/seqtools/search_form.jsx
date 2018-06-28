@@ -347,8 +347,11 @@ const GeneSequenceResources = React.createClass({
 		// sequence download row
 		
 		var seqDLRow = [];
-		if (hasCoding > 0) { 
+		if (hasCoding > 0 && hasProtein > 0) { 
 		     seqDLRow = [<span style={ style.textFont }><br>Sequence Downloads</br><br>* DNA of Region</br><br>* Coding Sequence of Selected ORF</br><br>* Protein Translation of Selected ORF</br></span>];
+		}
+		else if (hasCoding > 0) {
+		     seqDLRow = [<span style={ style.textFont }><br>Sequence Downloads</br><br>* DNA of Region</br><br>* Coding Sequence of Selected ORF</br></span>];
 		}
 		else {
 		     seqDLRow = [<span style={ style.textFont }><br>Sequence Downloads</br><br>* DNA of Region</br></span>];
@@ -388,10 +391,10 @@ const GeneSequenceResources = React.createClass({
 		         seqDLRow.push(<span style={ style.textFont}><br></br><br><a href={ genomicFastaUrl } target='infowin'>Fasta</a> | <a href={ genomicGcgUrl } target='infowin'>GCG</a></br><br><a href={ codingFastaUrl } target='infowin'>Fasta</a> | <a href={ codingGcgUrl } target='infowin'>GCG</a></br><br><a href={ proteinFastaUrl } target='infowin'>Fasta</a> | <a href={ proteinGcgUrl } target='infowin'>GCG</a></br></span>);
 		    }
 		    else if (hasCoding) {
-		    	 seqDLRow.push(<span style={ style.textFont}><br></br><br><a href={ genomicFastaUrl } target='infowin'>Fasta</a> | <a href={ genomicGcgUrl } target='infowin'>GCG</a></br><br><a href={ codingFastaUrl } target='infowin'>Fasta</a> | <a href={ codingGcgUrl } target='infowin'>GCG</a></br></span>);
+		    	 seqDLRow.push(<span style={ style.textFont}><br></br><br><a href={ genomicFastaUrl } target='infowin'>Fasta</a> | <a href={ genomicGcgUrl } target='infowin'>GCG</a></br><br><a href={ codingFastaUrl } target='infowin'>Fasta</a> | <a href={ codingGcgUrl } target='infowin'>GCG</a></br><br> - </br></span>);
 		    }
 		    else {
-		    	 seqDLRow.push(<span style={ style.textFont }><br></br><br><a href={ genomicFastaUrl } target='infowin'>Fasta</a> | <a href={ genomicGcgUrl } target='infowin'>GCG</a></br></span>);
+		    	 seqDLRow.push(<span style={ style.textFont }><br></br><br><a href={ genomicFastaUrl } target='infowin'>Fasta</a> | <a href={ genomicGcgUrl } target='infowin'>GCG</a></br><br> - </br><br> - </br></span>);
 		    } 
 	        });
 		rows.push(seqDLRow);
