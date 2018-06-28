@@ -73,7 +73,7 @@ const GeneSequenceResources = React.createClass({
 			     var genes = Object.keys(data).sort();
 			
 			     if(genes.length == 0) {
-				  return(<div><span style={ style.textFont }>No sequence available for the input gene(s) in the selected strain(s)</span></div>);
+				  return(<div><span style={ style.textFont }>No sequence available for the input gene(s)/feature(s) in the selected strain(s)</span></div>);
 			     }			
 
 			     if (data['ERROR']) {
@@ -821,6 +821,7 @@ const GeneSequenceResources = React.createClass({
 		window.localStorage.clear();
                 window.localStorage.setItem("genes", firstSet);
                 window.localStorage.setItem("strains", strains);
+		window.localStorage.setItem("firstSet", firstSet);
 		window.localStorage.setItem("secondSet", secondSet);
 
 	},
@@ -1056,6 +1057,7 @@ const GeneSequenceResources = React.createClass({
 
 		   if (param['more'] == 1) {
 		        var [firstSet, secondSet] = this.checkGenes(param['genes']);
+			window.localStorage.setItem("firstSet", firstSet);
 			window.localStorage.setItem("secondSet", secondSet);
 			paramData['genes'] = firstSet;
 		   }
@@ -1161,6 +1163,8 @@ const GeneSequenceResources = React.createClass({
 	     var rev = param['rev1'];
 	     var up = param['up'];
 	     var down = param['down'];
+	     
+	     var firstSetGenes = window.localStorage.getItem("firstSet");
 	     var secondSetGenes = window.localStorage.getItem("secondSet");
 
 	     var text = "";
@@ -1170,6 +1174,14 @@ const GeneSequenceResources = React.createClass({
 	          text = "The currently selected gene(s)/sequence(s) are ";
 	     }  
 	     text += "<font color='red'>" + geneList + "</font>";
+	     
+	     var pickedSet = firstSetGenes.split('+');
+	     var hasSeqSet = geneList.split(',');
+	     
+	     if (hasSeqSet.length < pickedSet.length) {
+		 text += "<br>No sequence available for the other gene(s)/feature(s) in this gene set in the selected strain(s).</br>"
+	     }
+	     
 	     if (secondSetGenes != "") {
 	     	 var moreLinkQueryStr = "genes=" + secondSetGenes;
 		 moreLinkQueryStr += "&strains=" + param['strains'];
@@ -1184,7 +1196,7 @@ const GeneSequenceResources = React.createClass({
                  }
 		 moreLinkQueryStr += "&submit=Submit+Form&more=1";
 		 
-	     	 text += "<br><a href='/seqTools?" + moreLinkQueryStr + "'>Search for rest of the gene(s)</a></br>"
+	     	 text += "<br><a href='/seqTools?" + moreLinkQueryStr + "'>Display next set of the gene(s)</a></br>"
 	     }
 
 	     if (up && down) {
