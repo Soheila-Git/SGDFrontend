@@ -70,6 +70,11 @@ const GeneSequenceResources = React.createClass({
 			
 			if (param['submit']) {
 			
+			     if(isEmpty(data)) {
+
+				  return(<div><span style={ style.textFont }>No sequence available for the input genes in the selected strains</div>);
+			     }			
+
 			     if (data['ERROR']) {
 			     	
 				  return (<div><span style={ style.textFont }>{ data['ERROR'] }</span></div>); 
@@ -261,6 +266,8 @@ const GeneSequenceResources = React.createClass({
 
 	getResultTable4gene(data) {
 		
+		return (<div>No sequence</div>);
+
 		var [genes, displayName4gene, sgdid4gene, seq4gene, hasProtein4gene, hasCoding4gene, hasGenomic4gene, chrCoords4gene] 
 			= this.getDataFromJson4gene(data);
 		
