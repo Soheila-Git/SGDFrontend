@@ -384,13 +384,13 @@ const GeneSequenceResources = React.createClass({
                     var	codingGcgUrl = SeqtoolsUrl + "?format=gcg&type=coding" + queryStr + extraParams;
 		    var proteinFastaUrl = SeqtoolsUrl + "?format=fasta&type=protein" + queryStr + extraParams;
                     var	proteinGcgUrl = SeqtoolsUrl + "?format=gcg&type=protein" + queryStr + extraParams;
-		    var hasCoding = hasCoding4gene[gene];
-		    var hasProtein = hasProtein4gene[gene];
-		    var hasGenomic = hasGenomic4gene[gene]; 
-		    if (hasProtein > 0) {
+		    var thisHasCoding = hasCoding4gene[gene];
+		    var thisHasProtein = hasProtein4gene[gene];
+		    var thisHasGenomic = hasGenomic4gene[gene]; 
+		    if (thisHasProtein > 0) {
 		         seqDLRow.push(<span style={ style.textFont}><br></br><br><a href={ genomicFastaUrl } target='infowin'>Fasta</a> | <a href={ genomicGcgUrl } target='infowin'>GCG</a></br><br><a href={ codingFastaUrl } target='infowin'>Fasta</a> | <a href={ codingGcgUrl } target='infowin'>GCG</a></br><br><a href={ proteinFastaUrl } target='infowin'>Fasta</a> | <a href={ proteinGcgUrl } target='infowin'>GCG</a></br></span>);
 		    }
-		    else if (hasCoding) {
+		    else if (thisHasCoding > 0) {
 		    	 seqDLRow.push(<span style={ style.textFont}><br></br><br><a href={ genomicFastaUrl } target='infowin'>Fasta</a> | <a href={ genomicGcgUrl } target='infowin'>GCG</a></br><br><a href={ codingFastaUrl } target='infowin'>Fasta</a> | <a href={ codingGcgUrl } target='infowin'>GCG</a></br><br> - </br></span>);
 		    }
 		    else {
