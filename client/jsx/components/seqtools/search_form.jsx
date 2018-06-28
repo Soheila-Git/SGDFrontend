@@ -1175,7 +1175,7 @@ const GeneSequenceResources = React.createClass({
 	     }  
 	     text += "<font color='red'>" + geneList + "</font>";
 	     
-	     var pickedSet = firstSetGenes.split('+');
+	     var pickedSet = firstSetGenes.split('|');
 	     var hasSeqSet = geneList.split(',');
 	     
 	     if (hasSeqSet.length < pickedSet.length) {
