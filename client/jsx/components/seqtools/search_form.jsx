@@ -71,7 +71,7 @@ const GeneSequenceResources = React.createClass({
 			if (param['submit']) {
 			
 			     if(isEmpty(data)) {
-				  return(<div><span style={ style.textFont }>No sequence available for the input genes in the selected strains</div></span>);
+				  return(<div><span style={ style.textFont }>No sequence available for the input genes in the selected strains</span></div>);
 			     }			
 
 			     if (data['ERROR']) {
