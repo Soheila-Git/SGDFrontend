@@ -13,6 +13,8 @@ const style = {
 
 const SeqtoolsUrl = "/run_seqtools";
 
+const MAX_GENE_TO_SHOW = 4;
+
 const GeneSequenceResources = React.createClass({
 
 	getInitialState() {
@@ -351,7 +353,7 @@ const GeneSequenceResources = React.createClass({
 		     seqDLRow = [<span style={ style.textFont }><br>Sequence Downloads</br><br>* DNA of Region</br><br>* Coding Sequence of Selected ORF</br><br>* Protein Translation of Selected ORF</br></span>];
 		}
 		else if (hasCoding > 0) {
-		     seqDLRow = [<span style={ style.textFont }><br>Sequence Downloads</br><br>* DNA of Region</br><br>* Coding Sequence of Selected ORF</br></span>];
+		     seqDLRow = [<span style={ style.textFont }><br>Sequence Downloads</br><br>* DNA of Region</br><br>* Coding Sequence of Selected Gene</br></span>];
 		}
 		else {
 		     seqDLRow = [<span style={ style.textFont }><br>Sequence Downloads</br><br>* DNA of Region</br></span>];
@@ -732,14 +734,14 @@ const GeneSequenceResources = React.createClass({
                 var firstSet = "";
                 var secondSet = "";
                 for (var i = 0; i < geneList.length; i++) {
-                    if (i < 5) {
+                    if (i < MAX_GENE_TO_SHOW) {
                          if (i >= 1) {
                               firstSet += "|";
                          }
                          firstSet += geneList[i];
                     }
                     else {
-                         if (i > 5) {
+                         if (i > MAX_GENE_TO_SHOW) {
                               secondSet += "+";
                          }
                          secondSet += geneList[i];
