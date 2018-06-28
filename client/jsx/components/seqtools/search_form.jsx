@@ -1180,7 +1180,7 @@ const GeneSequenceResources = React.createClass({
 	     var hasSeqSet = geneList.split(',');
 	     
 	     if (hasSeqSet.length < pickedSet.length) {
-		 text += "<p>No sequence available for the other gene(s)/feature(s) in this gene set in the selected strain(s).</p>"
+		 text += ". No sequence available for the other gene(s)/feature(s) in this gene set in the selected strain(s)."
 	     }
 	     
 	     if (secondSetGenes != "") {
