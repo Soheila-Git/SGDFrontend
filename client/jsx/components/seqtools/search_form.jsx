@@ -1189,6 +1189,8 @@ const GeneSequenceResources = React.createClass({
 		 });		 
 		 // text += ". No sequence available for the other gene(s)/feature(s) in this gene set in the selected strain(s)."
 
+		 console.log("genes="+genes);
+
 		 text += ". No sequence available for " + noSeqGenes + " in the selected strain(s).";
 	     }
 	     
