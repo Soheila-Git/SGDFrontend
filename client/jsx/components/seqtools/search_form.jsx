@@ -158,7 +158,7 @@ const GeneSequenceResources = React.createClass({
                 var chrNode = this.getChrNode();
                	var seqNode = this.getSeqNode();
 
-		var _nameSection = { headers: [[<span style={ style.textFont }><a name='gene'><strong>1. Search a list of genes</strong></a></span>, '']],
+		var _nameSection = { headers: [[<span style={ style.textFont }><a name='gene'>1. Search a list of genes</a></span>, '']],
 			    	     rows:    [[geneNodeLeft, geneNodeRight]] };
 				     
 		var _chrSeqSection = { headers: [[<span style={ style.textFont }><strong style={{ color: 'red'}}>OR</strong> <a name='chr'>2. Search a specified chromosomal region of S288C genome</a></span>, '', '', <span style={ style.textFont }><strong style={{ color: 'red'}}>OR</strong> <a name='seq'>3. Analyze a raw DNA or Protein sequence</a></span>]],
@@ -749,7 +749,7 @@ const GeneSequenceResources = React.createClass({
 			  
 	},
 
-	checkGenes(genes) {
+	checkGenes(genes, email) {
 		
 		genes = genes.replace(/[^A-Za-z:\-0-9]/g, ' ');
                 var re = /\+/g;
@@ -757,6 +757,12 @@ const GeneSequenceResources = React.createClass({
                 var re = / +/g;
 
                 var geneList = genes.split(' ');
+
+		alter("Email="+email);
+
+		if (geneList.length > MAX_GENE) {
+		     alert("Please enter an email address in the email text box so we can send the sequences to you.");
+		}  
                 var firstSet = "";
                 var secondSet = "";
                 for (var i = 0; i < geneList.length; i++) {
@@ -781,8 +787,9 @@ const GeneSequenceResources = React.createClass({
 	onSubmit(e) {
 		
 		var genes = this.refs.genes.value.trim();
-		
-		var [firstSet, secondSet] = this.checkGenes(genes);
+		var email = this.refs.email.value.trim();
+
+		var [firstSet, secondSet] = this.checkGenes(genes, email);
 
 		if (firstSet == '') {
                    alert("Please enter one or more gene names.");
