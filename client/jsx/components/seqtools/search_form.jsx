@@ -799,10 +799,11 @@ const GeneSequenceResources = React.createClass({
                 }
 		
 		if (email != "") {
-		     email.match(/\@/g) == null) {
-                     alert("Please enter a valid email address");
-                     e.preventDefault();
-                     return 1;		   
+		     if (email.match(/\@/g) == null) {
+                     	  alert("Please enter a valid email address");
+                     	  e.preventDefault();
+                     	  return 1;
+		     }		   
 		}
 		// this.setState({ notFound: "" });
 		// this.validateGenes(genes);		
