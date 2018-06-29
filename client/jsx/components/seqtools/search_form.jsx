@@ -794,7 +794,8 @@ const GeneSequenceResources = React.createClass({
 
 		if (geneCount > MAX_GENE) { 
 		     alert("email=" + email);
-		     alert("typeof(email)=" + typeof(email)) { 
+		     alert("typeof(email)=" + typeof(email));
+ 
                      alert("Please enter an email address in the email box so we can send the sequences to you.");
 		     e.preventDefault();
                      return 1;
