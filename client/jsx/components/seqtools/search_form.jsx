@@ -749,7 +749,7 @@ const GeneSequenceResources = React.createClass({
 			  
 	},
 
-	checkGenes(genes, email) {
+	checkGenes(genes) {
 		
 		genes = genes.replace(/[^A-Za-z:\-0-9]/g, ' ');
                 var re = /\+/g;
@@ -758,11 +758,6 @@ const GeneSequenceResources = React.createClass({
 
                 var geneList = genes.split(' ');
 
-		alert("Email="+email);
-
-		if (geneList.length > MAX_GENE) {
-		     alert("Please enter an email address in the email text box so we can send the sequences to you.");
-		}  
                 var firstSet = "";
                 var secondSet = "";
                 for (var i = 0; i < geneList.length; i++) {
@@ -780,7 +775,7 @@ const GeneSequenceResources = React.createClass({
                     }
                 }
 		
-		return [firstSet, secondSet];
+		return [firstSet, secondSet, geneList.length];
 
 	},
 
@@ -789,12 +784,18 @@ const GeneSequenceResources = React.createClass({
 		var genes = this.refs.genes.value.trim();
 		var email = this.refs.email.value.trim();
 
-		var [firstSet, secondSet] = this.checkGenes(genes, email);
-
+		var [firstSet, secondSet, geneCount] = this.checkGenes(genes);
+		
 		if (firstSet == '') {
-                   alert("Please enter one or more gene names.");
-                   e.preventDefault();
-                   return 1;
+                     alert("Please enter one or more gene names.");
+                     e.preventDefault();
+                     return 1;
+                }
+
+		if (geneCount > MAX_GENE && typeof(email) == "undefined") { 
+                     alert("Please enter an email address in the email box so we can send the sequences to you.");
+		     e.preventDefault();
+                     return 1;
                 }
 		
 		// this.setState({ notFound: "" });
