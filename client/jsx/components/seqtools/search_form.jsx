@@ -685,10 +685,12 @@ const GeneSequenceResources = React.createClass({
 		var seq4gene = {}
 		var chrCoords4gene = {}
 		var queryGeneList = []
+		var genes = []
 		_.map(keys, key => {
 		      var [gene, queryGene] = key.split("|");
 		      queryGeneList.push(queryGene);
-                      var seqInfo = data[gene];
+		      genes.push(gene);
+                      var seqInfo = data[key];
                       var proteinSeq4strain = {};
                       var codingSeq4strain = {};
                       var genomicSeq4strain = {};
