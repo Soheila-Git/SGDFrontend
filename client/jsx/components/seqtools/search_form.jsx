@@ -82,8 +82,8 @@ const GeneSequenceResources = React.createClass({
 
 			     }
    
-			     var [_geneList, _resultTable] = this.getResultTable4gene(data);
-			     var _desc = this.getDesc4gene(_geneList);
+			     var [_geneList, _genes, _resultTable] = this.getResultTable4gene(data);
+			     var _desc = this.getDesc4gene(_geneList, _genes);
 
 			     return (<div>
 					   <p dangerouslySetInnerHTML={{ __html: _desc }} />
@@ -436,7 +436,7 @@ const GeneSequenceResources = React.createClass({
 		});		
 		rows.push(seqAnalRow);
 
-		return [geneList, this.display_result_table(headerRow, rows)];		
+		return [geneList, genes, this.display_result_table(headerRow, rows)];		
 		
 	},
 
@@ -1157,7 +1157,7 @@ const GeneSequenceResources = React.createClass({
 
 	},
 	
-       getDesc4gene(geneList) {
+       getDesc4gene(geneList, genes) {
 
 	     var param = this.state.param;
 	     var rev = param['rev1'];
@@ -1175,12 +1175,21 @@ const GeneSequenceResources = React.createClass({
 	     }  
 	     text += "<font color='red'>" + geneList + "</font>";
 	     
-	     console.log("firstSetGenes="+firstSetGenes);
 	     var pickedSet = firstSetGenes.split('|');
-	     var hasSeqSet = geneList.split(',');
-	     
-	     if (hasSeqSet.length < pickedSet.length) {
-		 text += ". No sequence available for the other gene(s)/feature(s) in this gene set in the selected strain(s)."
+
+	     if (genes.length < pickedSet.length) {
+	         var noSeqGenes = "";
+		 _.map(pickedSet, gene => {
+		      if (genes.indexOf(gene) < 0) {
+		      	  if (noSeqGenes != "") {
+			      noSeqGenes += ", ";
+			  }
+			  noSeqGenes += gene; 
+		      }
+		 });		 
+		 // text += ". No sequence available for the other gene(s)/feature(s) in this gene set in the selected strain(s)."
+
+		 text += ". No sequence available for " + noSeqGenes + " in the selected strain(s).";
 	     }
 	     
 	     if (secondSetGenes != "") {
