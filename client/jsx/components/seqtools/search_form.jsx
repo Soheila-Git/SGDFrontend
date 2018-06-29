@@ -13,8 +13,8 @@ const style = {
 
 const SeqtoolsUrl = "/run_seqtools";
 
-const MAX_GENE_TO_SHOW = 15;
-const MAX_GENE = 50;
+const MAX_GENE_TO_SHOW = 100;
+const MAX_GENE = 500;
 
 const GeneSequenceResources = React.createClass({
 
