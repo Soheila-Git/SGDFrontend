@@ -758,7 +758,7 @@ const GeneSequenceResources = React.createClass({
 
                 var geneList = genes.split(' ');
 
-		alter("Email="+email);
+		alert("Email="+email);
 
 		if (geneList.length > MAX_GENE) {
 		     alert("Please enter an email address in the email text box so we can send the sequences to you.");
