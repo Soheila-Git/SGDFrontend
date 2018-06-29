@@ -13,8 +13,8 @@ const style = {
 
 const SeqtoolsUrl = "/run_seqtools";
 
-const MAX_GENE_TO_SHOW = 4;
-const MAX_GENE = 12;
+const MAX_GENE_TO_SHOW = 15;
+const MAX_GENE = 50;
 
 const GeneSequenceResources = React.createClass({
 
@@ -805,6 +805,7 @@ const GeneSequenceResources = React.createClass({
                      	  return 1;
 		     }		   
 		}
+
 		// this.setState({ notFound: "" });
 		// this.validateGenes(genes);		
 		// var not_found = this.state.notFound;
