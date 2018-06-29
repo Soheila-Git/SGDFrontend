@@ -267,7 +267,7 @@ const GeneSequenceResources = React.createClass({
 
 	getResultTable4gene(data) {
 
-		var [genes, displayName4gene, sgdid4gene, seq4gene, hasProtein4gene, hasCoding4gene, hasGenomic4gene, chrCoords4gene] 
+		var [genes, displayName4gene, sgdid4gene, seq4gene, hasProtein4gene, hasCoding4gene, hasGenomic4gene, chrCoords4gene, queryGeneList] 
 			= this.getDataFromJson4gene(data);
 		
 		var param = this.state.param; 
@@ -436,7 +436,7 @@ const GeneSequenceResources = React.createClass({
 		});		
 		rows.push(seqAnalRow);
 
-		return [geneList, genes, this.display_result_table(headerRow, rows)];		
+		return [geneList, queryGeneList, this.display_result_table(headerRow, rows)];		
 		
 	},
 
@@ -675,7 +675,7 @@ const GeneSequenceResources = React.createClass({
 
 	getDataFromJson4gene(data) {
 	        
-		var genes = Object.keys(data).sort();
+		var keys = Object.keys(data).sort();
 		var displayName4gene = {};
 		var sgdid4gene = {};
 		var featureType4gene = {};
@@ -684,7 +684,10 @@ const GeneSequenceResources = React.createClass({
 		var hasGenomic4gene = {};
 		var seq4gene = {}
 		var chrCoords4gene = {}
-		_.map(genes, gene => {
+		var queryGeneList = []
+		_.map(keys, key => {
+		      var [gene, queryGene] = key.split("|");
+		      queryGeneList.push(queryGene);
                       var seqInfo = data[gene];
                       var proteinSeq4strain = {};
                       var codingSeq4strain = {};
@@ -738,7 +741,7 @@ const GeneSequenceResources = React.createClass({
 
                 });
 
-		return [genes, displayName4gene, sgdid4gene, seq4gene, hasProtein4gene, hasCoding4gene, hasGenomic4gene, chrCoords4gene];
+		return [genes, displayName4gene, sgdid4gene, seq4gene, hasProtein4gene, hasCoding4gene, hasGenomic4gene, chrCoords4gene, queryGeneList];
 			  
 	},
 
@@ -1179,20 +1182,20 @@ const GeneSequenceResources = React.createClass({
 	     var pickedSet = firstSetGenes.split('|');
 
 	     if (genes.length < pickedSet.length) {
-	         // var noSeqGenes = "";
-		 //_.map(pickedSet, gene => {
-		 //     if (genes.indexOf(gene) < 0) {
-		 //     	  if (noSeqGenes != "") {
-		 //	      noSeqGenes += ", ";
-		 //	  }
-		 //	  noSeqGenes += gene; 
-		 //     }
-		 // });		 
+	         var noSeqGenes = "";
+		 _.map(pickedSet, gene => {
+		      if (genes.indexOf(gene) < 0) {
+		      	  if (noSeqGenes != "") {
+		 	      noSeqGenes += ", ";
+		 	  }
+		 	  noSeqGenes += gene; 
+		      }
+		 });		 
 		 
-		 text += ". No sequence available for the other gene(s)/feature(s) in the selected strain(s)."
+		 // text += ". No sequence available for the other gene(s)/feature(s) in the selected strain(s)."
 
-		 // console.log("genes="+genes);
-		 // text += ". No sequence available for " + noSeqGenes + " in the selected strain(s).";
+		 console.log("genes="+genes);
+		 text += ". No sequence available for <font color='red'>" + noSeqGenes + "</font> in the selected strain(s).";
 	     }
 	     
 	     if (secondSetGenes != "") {

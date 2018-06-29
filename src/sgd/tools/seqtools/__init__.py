@@ -355,6 +355,7 @@ def get_sequence_for_genes(p):
     data = {}
 
     for name in genes:
+        gene = name
         name = name.upper()
         name = name.replace("SGD:", "")
         url = seq_url.replace("_REPLACE_NAME_HERE_", name)
@@ -394,9 +395,9 @@ def get_sequence_for_genes(p):
             allSeqData['chr_coords'] = { "start": start, 
                                          "end": end, 
                                          "chr": chr,
-                                         "locus_type": type}
+                                         "locus_type": type }
         if format_name is not None:
-            data[format_name] = allSeqData
+            data[format_name + "|" + gene] = allSeqData
 
     return data
 
