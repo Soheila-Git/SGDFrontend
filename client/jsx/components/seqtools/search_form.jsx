@@ -906,8 +906,7 @@ const GeneSequenceResources = React.createClass({
                 return (<div>
                         <h3>Pick one or more strains:</h3>
                         { strainNode }
-			<p>Email to send sequence(s): <input type='text' ref='email' name='email' onChange={this.onChange} size='50'></input>
-			<input type="submit" ref='submit' name='submit' value="Submit Form" className="button secondary"></input> <input type="reset" ref='reset' name='reset' value="Reset Form" className="button secondary"></input></p>
+			<p><input type="submit" ref='submit' name='submit' value="Submit Form" className="button secondary"></input> <input type="reset" ref='reset' name='reset' value="Reset Form" className="button secondary"></input></p>
                 </div>);
 
         },
@@ -1040,7 +1039,8 @@ const GeneSequenceResources = React.createClass({
 
                 return(<div>
 		       <p>(Select or unselect multiple strains by pressing<br></br>the Control (PC) or Command (Mac) key while clicking.)
-                       <select ref='strains' name='strains' id='strains' onChange={this.onChange} size='11' multiple>{_elements}</select></p>
+                       <select ref='strains' name='strains' id='strains' onChange={this.onChange} size='11' multiple>{_elements}</select>
+		       Email to send sequence(s): <input type='text' ref='email' name='email' onChange={this.onChange} size='10'></input></p>
                 </div>);
 
         },
