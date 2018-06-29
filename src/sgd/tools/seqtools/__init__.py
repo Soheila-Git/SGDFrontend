@@ -361,11 +361,12 @@ def get_sequence_for_genes(p):
         res = _get_json_from_server(url)        
 
         if res == 404:
-            data[name] = {}
+            # data[name] = {}
             continue
         
         if len(res.get('genomic_dna')) == 0:
-            data[name] = {}
+            # data[name] = {}
+            continue
 
         allSeqData = {}
         format_name = None
