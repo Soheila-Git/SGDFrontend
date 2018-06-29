@@ -885,16 +885,14 @@ const GeneSequenceResources = React.createClass({
 
 	getGeneNodeLeft() {
 			  
-	        var reverseCompNode = this.getReverseCompNode('rev1');
-
                 return (<div style={{ textAlign: "top" }}>
                         <h3>Enter a list of names:</h3>
-			<p>[space-separated standard gene names (and/or ORF and/or SGDID). Example: ACT1 YHR023W SGD:S000000001. The maximum gene number for web display is 12] 
+			<p>[space-separated standard gene names (and/or ORF and/or SGDID). Example: SIR2 YHR023W SGD:S000000001. The maximum gene number for web display is 12] 
 			<textarea ref='genes' name='genes' onChange={this.onChange} rows='2' cols='50'></textarea></p>
 			<h3><b>If available,</b> add flanking basepairs</h3>
 			<p>Upstream: <input type='text' ref='up' name='up' onChange={this.onChange} size='50'></input>
 			Downstream: <input type='text' ref='down' name='down' onChange={this.onChange} size='50'></input></p>
-			{ reverseCompNode }			
+			<p>Email to send sequence(s): <input type='text' ref='email' name='email' onChange={this.onChange} size='10'></input></p>
                 </div>);
 
         },
@@ -902,10 +900,12 @@ const GeneSequenceResources = React.createClass({
 	getGeneNodeRight() {
 
                 var strainNode = this.getStrainNode();
+		var reverseCompNode = this.getReverseCompNode('rev1');
 
                 return (<div>
                         <h3>Pick one or more strains:</h3>
                         { strainNode }
+			{ reverseCompNode }			
 			<p><input type="submit" ref='submit' name='submit' value="Submit Form" className="button secondary"></input> <input type="reset" ref='reset' name='reset' value="Reset Form" className="button secondary"></input></p>
                 </div>);
 
@@ -1039,8 +1039,7 @@ const GeneSequenceResources = React.createClass({
 
                 return(<div>
 		       <p>(Select or unselect multiple strains by pressing<br></br>the Control (PC) or Command (Mac) key while clicking.)
-                       <select ref='strains' name='strains' id='strains' onChange={this.onChange} size='11' multiple>{_elements}</select>
-		       Email to send sequence(s): <input type='text' ref='email' name='email' onChange={this.onChange} size='10'></input></p>
+                       <select ref='strains' name='strains' id='strains' onChange={this.onChange} size='11' multiple>{_elements}</select></p>
                 </div>);
 
         },
