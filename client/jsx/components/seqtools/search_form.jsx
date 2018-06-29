@@ -171,7 +171,8 @@ const GeneSequenceResources = React.createClass({
 			     	  <form onSubmit={this.onSubmit} target="infowin">
 				        <DataTable data={_nameSection} />
 			          </form>
-			         <DataTable data={_chrSeqSection} />        
+				  <p></p>
+			          <DataTable data={_chrSeqSection} />        
 			     </div>
 			</div>
 		</div>);
