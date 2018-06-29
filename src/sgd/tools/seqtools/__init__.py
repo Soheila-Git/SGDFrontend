@@ -363,6 +363,9 @@ def get_sequence_for_genes(p):
         if res == 404:
             data[name] = {}
             continue
+        
+        if len(res.get('genomic_dna')) == 0:
+            data[name] = {}
 
         allSeqData = {}
         format_name = None
