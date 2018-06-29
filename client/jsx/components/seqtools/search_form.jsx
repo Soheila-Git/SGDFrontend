@@ -14,6 +14,7 @@ const style = {
 const SeqtoolsUrl = "/run_seqtools";
 
 const MAX_GENE_TO_SHOW = 4;
+const MAX_GENE = 12;
 
 const GeneSequenceResources = React.createClass({
 
@@ -888,7 +889,7 @@ const GeneSequenceResources = React.createClass({
 
                 return (<div style={{ textAlign: "top" }}>
                         <h3>Enter a list of names:</h3>
-			<p>(space-separated gene names (and/or ORF and/or SGDID). Example: ACT1 YHR023W SGD:S000000001) 
+			<p>[space-separated standard gene names (and/or ORF and/or SGDID). Example: ACT1 YHR023W SGD:S000000001. The maximum gene number for web display is 12] 
 			<textarea ref='genes' name='genes' onChange={this.onChange} rows='2' cols='50'></textarea></p>
 			<h3><b>If available,</b> add flanking basepairs</h3>
 			<p>Upstream: <input type='text' ref='up' name='up' onChange={this.onChange} size='50'></input>
@@ -905,6 +906,7 @@ const GeneSequenceResources = React.createClass({
                 return (<div>
                         <h3>Pick one or more strains:</h3>
                         { strainNode }
+			<p>Email to send sequence(s): <input type='text' ref='email' name='email' onChange={this.onChange} size='50'></input>
 			<p><input type="submit" ref='submit' name='submit' value="Submit Form" className="button secondary"></input> <input type="reset" ref='reset' name='reset' value="Reset Form" className="button secondary"></input></p>
                 </div>);
 
