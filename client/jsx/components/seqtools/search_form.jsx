@@ -1197,7 +1197,7 @@ const GeneSequenceResources = React.createClass({
                  }
 		 moreLinkQueryStr += "&submit=Submit+Form&more=1";
 		 
-	     	 text += "<p><a href='/seqTools?" + moreLinkQueryStr + "'>Display next set of the gene(s)</a></p>"
+	     	 text += "<br></br><p><a href='/seqTools?" + moreLinkQueryStr + "'>Display next set of the gene(s)</a></p>"
 	     }
 
 	     if (up && down) {
