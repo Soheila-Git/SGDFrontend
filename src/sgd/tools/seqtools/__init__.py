@@ -405,6 +405,7 @@ def _extract_chr_coordinates(rows):
     start = None
     end = None
     chr = None
+    locus_type = None
     for row in rows:
         strain = row['strain']
         strain_name = strain['display_name']
@@ -413,8 +414,8 @@ def _extract_chr_coordinates(rows):
             end = row['end']
             chr = row['contig']['display_name'].replace("Chromosome ", "")
             locus = row['locus']
-
-    return [start, end, chr, locus['locus_type']]
+            locus_type = locus['locus_type']
+    return [start, end, chr, locus_type]
 
 
 def _extract_seq(strains, rows, rev):
