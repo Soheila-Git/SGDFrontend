@@ -15,6 +15,7 @@ const SeqtoolsUrl = "/run_seqtools";
 
 const MAX_GENE_TO_SHOW = 4;
 const MAX_GENE = 20;
+const MAX_SEQ_LENGTH_FOR_TOOLS = 20000;
 
 const GeneSequenceResources = React.createClass({
 
@@ -455,7 +456,10 @@ const GeneSequenceResources = React.createClass({
 		var seqlen = seq.length;
 
 		if (seqlen > 20) {
-                     return(<div className="row">
+		      
+		     if (seq.length <= MAX_SEQ_LENGTH_FOR_TOOLS) {
+
+                     	  return(<div className="row">
                                  <div className="large-12 columns">
                                       { blastButton }
                                       { fungalBlastButton }
@@ -464,7 +468,17 @@ const GeneSequenceResources = React.createClass({
 				      { translatedProteinButton }
 				      { sixframeButton }
                                  </div>
-                     </div>);
+                          </div>);
+	             }
+		     else {
+
+		     	  return(<div className="row">
+                                 <div className="large-12 columns">
+                                      { blastButton }
+                                      { fungalBlastButton }
+                                 </div>
+                          </div>);
+		     }
 		}
 		else {
 
@@ -523,21 +537,34 @@ const GeneSequenceResources = React.createClass({
 			    
                 var blastButton = this.getToolButtonChr('/blast-sgd',  'BLAST', seqID, '');
                 var fungalBlastButton = this.getToolButtonChr('/blast-fungal', 'Fungal BLAST', seqID, '');
-                var primerButton = this.getToolButtonChr('/primer3', 'Design Primers', seqID, '');
-                var restrictionButton = this.getToolButtonChr4post('https://www.yeastgenome.org/cgi-bin/PATMATCH/RestrictionMapper', 'Genome Restriction Map', seq);
-		var restrictFragmentsButton = this.getToolButtonChr('/seqTools', 'Restriction Fragments', seqID, 'restrict');
-                var sixframeButton = this.getToolButtonChr('/seqTools', '6 Frame Translation', seqID, 'remap');
 		
-                return(<div className="row">
-                            <div className="large-12 columns">
-                                 { blastButton }
-                                 { fungalBlastButton }
-                                 { primerButton }
-                                 { restrictionButton }
-				 { restrictFragmentsButton }
-				 { sixframeButton }
-                            </div>
-                </div>);
+		if (seq.length <= MAX_SEQ_LENGTH_FOR_TOOLS) {
+
+		     var primerButton = this.getToolButtonChr('/primer3', 'Design Primers', seqID, '');
+                     var restrictionButton = this.getToolButtonChr4post('https://www.yeastgenome.org/cgi-bin/PATMATCH/RestrictionMapper', 'Genome Restriction Map', seq);
+                     var restrictFragmentsButton = this.getToolButtonChr('/seqTools', 'Restriction Fragments', seqID, 'restrict');
+                     var sixframeButton = this.getToolButtonChr('/seqTools', '6 Frame Translation', seqID, 'remap');
+
+                     return(<div className="row">
+                               <div className="large-12 columns">
+                                    { blastButton }
+                                    { fungalBlastButton }
+                                    { primerButton }
+                                    { restrictionButton }
+				    { restrictFragmentsButton }
+				    { sixframeButton }
+                               </div>
+                     </div>);
+		}
+		else {
+
+		     return(<div className="row">
+                               <div className="large-12 columns">
+                                    { blastButton }
+                                    { fungalBlastButton }
+                               </div>
+                     </div>);
+		}
 
 	},
 
@@ -898,7 +925,7 @@ const GeneSequenceResources = React.createClass({
 			  
                 return (<div style={{ textAlign: "top" }}>
                         <h3>Enter a list of names:</h3>
-			<p>[space-separated standard gene names (and/or ORF and/or SGDID). Example: SIR2 YHR023W SGD:S000000001. The maximum gene number for this search is 20. It will take first 20 genes if more than 20 are provided.] 
+			<p>[space-separated standard gene names (and/or ORF and/or SGDID). Example: SIR2 YHR023W<br></br>SGD:S000000001. The maximum gene number for this search is 20. It will take first 20 genes if<br></br> more than 20 are provided.] 
 			<textarea ref='genes' name='genes' onChange={this.onChange} rows='2' cols='50'></textarea></p>
 			<h3><b>If available,</b> add flanking basepairs</h3>
 			<p>Upstream: <input type='text' ref='up' name='up' onChange={this.onChange} size='50'></input>
