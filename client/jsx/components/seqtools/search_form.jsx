@@ -13,8 +13,8 @@ const style = {
 
 const SeqtoolsUrl = "/run_seqtools";
 
-const MAX_GENE_TO_SHOW = 100;
-const MAX_GENE = 500;
+const MAX_GENE_TO_SHOW = 4;
+const MAX_GENE = 20;
 
 const GeneSequenceResources = React.createClass({
 
@@ -782,7 +782,7 @@ const GeneSequenceResources = React.createClass({
 	onSubmit(e) {
 		
 		var genes = this.refs.genes.value.trim();
-		var email = this.refs.email.value.trim();
+		// var email = this.refs.email.value.trim();
 
 		var [firstSet, secondSet, geneCount] = this.checkGenes(genes);
 		
@@ -792,26 +792,18 @@ const GeneSequenceResources = React.createClass({
                      return 1;
                 }
 
-		if (geneCount > MAX_GENE && email == "") { 
-                     alert("Please enter an email address in the email box so we can send the sequences to you.");
-		     e.preventDefault();
-                     return 1;
-                }
+		// if (geneCount > MAX_GENE && email == "") { 
+                //     alert("Please enter an email address in the email box so we can send the sequences to you.");
+		//     e.preventDefault();
+                //     return 1;
+                // }
 		
-		if (email != "") {
-		     if (email.match(/\@/g) == null) {
-                     	  alert("Please enter a valid email address");
-                     	  e.preventDefault();
-                     	  return 1;
-		     }		   
-		}
-
-		// this.setState({ notFound: "" });
-		// this.validateGenes(genes);		
-		// var not_found = this.state.notFound;
-		// if (not_found != "") {
-		//        e.preventDefault();
-		//	return 1;
+		// if (email != "") {
+		//     if (email.match(/\@/g) == null) {
+                //     	  alert("Please enter a valid email address");
+                //     	  e.preventDefault();
+                //     	  return 1;
+		//     }		   
 		// }
 
 		var up = this.refs.up.value.trim();
@@ -901,15 +893,17 @@ const GeneSequenceResources = React.createClass({
         },
 
 	getGeneNodeLeft() {
+
+		var reverseCompNode = this.getReverseCompNode('rev1');
 			  
                 return (<div style={{ textAlign: "top" }}>
                         <h3>Enter a list of names:</h3>
-			<p>[space-separated standard gene names (and/or ORF and/or SGDID). Example: SIR2 YHR023W SGD:S000000001. The maximum gene number for web display is 12] 
+			<p>[space-separated standard gene names (and/or ORF and/or SGDID). Example: SIR2 YHR023W SGD:S000000001. The maximum gene number for this search is 20] 
 			<textarea ref='genes' name='genes' onChange={this.onChange} rows='2' cols='50'></textarea></p>
 			<h3><b>If available,</b> add flanking basepairs</h3>
 			<p>Upstream: <input type='text' ref='up' name='up' onChange={this.onChange} size='50'></input>
 			Downstream: <input type='text' ref='down' name='down' onChange={this.onChange} size='50'></input></p>
-			<p>Email to send sequence(s): <input type='text' ref='email' name='email' onChange={this.onChange} size='10'></input></p>
+			{ reverseCompNode }
                 </div>);
 
         },
@@ -922,7 +916,6 @@ const GeneSequenceResources = React.createClass({
                 return (<div>
                         <h3>Pick one or more strains:</h3>
                         { strainNode }
-			{ reverseCompNode }			
 			<p><input type="submit" ref='submit' name='submit' value="Submit Form" className="button secondary"></input> <input type="reset" ref='reset' name='reset' value="Reset Form" className="button secondary"></input></p>
                 </div>);
 
