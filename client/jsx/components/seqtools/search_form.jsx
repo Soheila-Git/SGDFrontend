@@ -818,7 +818,7 @@ const GeneSequenceResources = React.createClass({
 
 		var allGenes = firstSet;
 		if (secondSet != "") {
-		     allGenes = allGenes + "|" + secondSet.replace(/+/g, "|");
+		     allGenes = allGenes + "|" + secondSet.replace(/+/, "|");
 		}
 		
 		if (firstSet == '') {
