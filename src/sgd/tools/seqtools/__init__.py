@@ -345,7 +345,7 @@ def get_sequence_for_genes(p):
     if genes is None:
         return { "ERROR": "NO GENE NAME PASSED IN" }
     genes = genes.split('|')
-    strains = strains.replace("%20", "|").replace("+", "|")
+    strains = strains.replace("%20", "|").replace("+", "|").replace(" ", "|")
     strains = strains.split('|')
     rev = p.get('rev')
     if rev == '1':
