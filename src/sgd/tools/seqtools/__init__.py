@@ -36,10 +36,9 @@ def do_seq_analysis(request):
     if p.get('format') is None:
         return Response(body=json.dumps(data), content_type='application/json')
     else:
-        # response = display_sequence_for_genes(p, data)
-        # return response
-        return Response(body=json.dumps(data), content_type='application/json')
-
+        response = display_sequence_for_genes(p, data)
+        return response
+        
 def run_emboss(p):
 
     emboss = p['emboss']
@@ -154,6 +153,8 @@ def display_sequence_for_genes(p, data):
                 continue
             strainInfo = seqtypeInfo[seqtype]
             allStrains = list(strainInfo.keys())
+            if len(allStrains) == 0:
+                continue
             if 'S288C' in strainInfo:
                 allStrains.remove('S288C')
                 allStrains = ['S288C'] + sorted(allStrains)
@@ -170,6 +171,8 @@ def display_sequence_for_genes(p, data):
     else:
         filename += "_" + type + ".fsa"
 
+    if content == "":
+        content = "No sequence available." 
     return set_download_file(filename, content)
 
 
