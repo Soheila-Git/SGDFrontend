@@ -788,24 +788,22 @@ const GeneSequenceResources = React.createClass({
 
                 var geneList = genes.split(' ');
 
-                var firstSet = "";
-                var secondSet = "";
+                var displaySet = "";
+                var allGenes = "";
                 for (var i = 0; i < geneList.length; i++) {
                     if (i < MAX_GENE_TO_SHOW) {
                          if (i >= 1) {
-                              firstSet += "|";
+                              displaySet += "|";
                          }
-                         firstSet += geneList[i];
+                         displaySet += geneList[i];
                     }
-                    else {
-                         if (i > MAX_GENE_TO_SHOW) {
-                              secondSet += "+";
-                         }
-                         secondSet += geneList[i];
+		    if (i >= 1) {
+                         allGenes += "|";
                     }
+                    allGenes += geneList[i];
                 }
 		
-		return [firstSet, secondSet, geneList.length];
+		return [displaySet, allGenes, geneList.length];
 
 	},
 
@@ -814,14 +812,9 @@ const GeneSequenceResources = React.createClass({
 		var genes = this.refs.genes.value.trim();
 		// var email = this.refs.email.value.trim();
 
-		var [firstSet, secondSet, geneCount] = this.checkGenes(genes);
-
-		var allGenes = firstSet;
-		if (secondSet != "") {
-		     allGenes = allGenes + "|" + secondSet.replace(/\+/g, "|");
-		}
+		var [displaySet, allGenes, geneCount] = this.checkGenes(genes);
 		
-		if (firstSet == '') {
+		if (displaySet == '') {
                      alert("Please enter one or more gene names.");
                      e.preventDefault();
                      return 1;
@@ -869,10 +862,9 @@ const GeneSequenceResources = React.createClass({
 		}	
 	
 		window.localStorage.clear();
-                window.localStorage.setItem("genes", firstSet);
+                window.localStorage.setItem("genes", displaySet);
+		window.localStorage.setItem("displaySet", displaySet);
                 window.localStorage.setItem("strains", strains);
-		window.localStorage.setItem("firstSet", firstSet);
-		window.localStorage.setItem("secondSet", secondSet);
 		window.localStorage.setItem("allGenes", allGenes);
 	},
 
@@ -1106,16 +1098,23 @@ const GeneSequenceResources = React.createClass({
 
 		if (searchType == 'genes') {
 
-		   if (param['more'] == 1) {
-		        var [firstSet, secondSet] = this.checkGenes(param['genes']);
-			window.localStorage.setItem("firstSet", firstSet);
-			window.localStorage.setItem("secondSet", secondSet);
-			paramData['genes'] = firstSet;
+		   var more = param['more'];
+		   if (more > 0) {
+		        var displaySet = "";
+			var allGenes = window.localStorage.getItem("allGenes");
+			var allGeneList = allGenes.split("|");
+			for (var i = 0; i < allGeneList.list; i++) {
+			    if (i >= (more-1) * MAX_GENE_TO_SHOW && i < more * MAX_GENE_TO_SHOW) {
+			         if (displaySet != "") {
+				      displaySet += "|";
+				 } 
+				 displaySet += allGeneList[i];
+			    }
+			} 
+			window.localStorage.setItem("displaySet", displaySet);
+			
 		   }
-		   else {
-		   	paramData['genes'] = window.localStorage.getItem("genes");
-	           }
-		   
+		   paramData['genes'] = window.localStorage.getItem("displaySet");
 		   paramData['strains'] = window.localStorage.getItem("strains");
 
 		   if (param['up']) {		   
@@ -1248,22 +1247,18 @@ const GeneSequenceResources = React.createClass({
 	     var rev = param['rev1'];
 	     var up = param['up'];
 	     var down = param['down'];
-	     
-	     var firstSetGenes = window.localStorage.getItem("firstSet");
-	     var secondSetGenes = window.localStorage.getItem("secondSet");
+	     var more = param['more'];
+
+	     var displaySetGenes = window.localStorage.getItem("displaySet");
 	     var allGenes = window.localStorage.getItem("allGenes");
 
-	     var text = "";
-	     if (secondSetGenes != "") {
-	     	  text = "The currently displayed gene(s)/sequence(s) are ";
-	     } else {
-	          text = "The currently selected gene(s)/sequence(s) are ";
-	     }  
+	     var text = "The currently selected gene(s)/sequence(s) are ";
+	       
 	     text += "<font color='red'>" + geneList + "</font>";
 	     
 	     var extraParams = this.getExtraParams(param);
 
-	     var pickedSet = firstSetGenes.split('|');
+	     var pickedSet = displaySetGenes.split('|');
 
 	     if (genes.length < pickedSet.length) {
 	          var noSeqGenes = "";
@@ -1279,16 +1274,49 @@ const GeneSequenceResources = React.createClass({
 		  // text += ". No sequence available for the other gene(s)/feature(s) in the selected strain(s)."
 
 		  console.log("genes="+genes);
-		  text += ". No sequence available for <font color='red'>" + noSeqGenes + "</font> in the selected strain(s).";
+		  text += ". No sequence available for <font color='red'>" + noSeqGenes + "</font> in the selected strain(s)in this gene set.";
 	     }
 	     
-	     if (secondSetGenes != "") {
-	     	  var moreLinkQueryStr = "genes=" + secondSetGenes;
+	     var allGeneList = allGenes.split("|");
+	     
+	     if (allGeneList.length > MAX_GENE_TO_SHOW) {
+
+	     	  var moreLinkQueryStr = "genes=" + allGenes;
 		  moreLinkQueryStr += "&strains=" + param['strains'];
 		  moreLinkQueryStr += extraParams;
 		  moreLinkQueryStr += "&submit=Submit+Form&more=1";
-		 
-	     	  text += "<br></br><p><a href='/seqTools?" + moreLinkQueryStr + "'>Display next set of the gene(s)</a></p>"
+
+		  var linkCount = allGeneList.length/4 + 1;
+		  
+		  var links = "";
+		  var prev = "";
+		  var next = "";
+		  for (var i = 1; i <= linkCount; i++) {
+		       if (links != "") {
+		       	  links += ", ";
+		       }
+		       if (more == i) {
+		       	    links += i;
+			    if (prev == "" && i > 1) {
+			        prev = "<a href=href=/seqTools?" + moreLinkQueryStr + "&more=" + i-1 + "</a>";
+			    } 
+			    if (next == "" && i < linkCount) {
+			        next = "<a href=href=/seqTools?" + moreLinkQueryStr + "&more=" + i+1 + "</a>";
+			    }    
+		       }
+		       else {
+		       	    links += "<a href=href=/seqTools?" + moreLinkQueryStr + "&more=" + i + "</a>";
+		       }
+		  }		 
+
+		  if (prev != "") {
+		       links = prev + " " + links;
+		  }
+		  if (next != "") {
+		       links += links + " " + next;
+		  }
+		  
+		  text += "<p>Display gene sets: " + links + "</p>";		 
 	     }
 
 	     if (up && down) {
