@@ -1228,16 +1228,16 @@ const GeneSequenceResources = React.createClass({
 
 	getAllDownloadLinks(queryStr) {
 
-	     var genomicFastaUrl = SeqtoolsUrl + "?format=fasta&type=genomic" + queryStr;
-	     var genomicGcgUrl = SeqtoolsUrl + "?format=gcg&type=genomic" + queryStr;
-	     var codingFastaUrl = SeqtoolsUrl + "?format=fasta&type=coding" + queryStr;
-	     var codingGcgUrl = SeqtoolsUrl + "?format=gcg&type=coding" + queryStr;
-	     var proteinFastaUrl = SeqtoolsUrl + "?format=fasta&type=protein" + queryStr;
-	     var proteinGcgUrl = SeqtoolsUrl + "?format=gcg&type=protein" + queryStr;
+	     var genomicFastaUrl = SeqtoolsUrl + "?format=fasta&type=genomic&" + queryStr;
+	     var genomicGcgUrl = SeqtoolsUrl + "?format=gcg&type=genomic&" + queryStr;
+	     var codingFastaUrl = SeqtoolsUrl + "?format=fasta&type=coding&" + queryStr;
+	     var codingGcgUrl = SeqtoolsUrl + "?format=gcg&type=coding&" + queryStr;
+	     var proteinFastaUrl = SeqtoolsUrl + "?format=fasta&type=protein&" + queryStr;
+	     var proteinGcgUrl = SeqtoolsUrl + "?format=gcg&type=protein&" + queryStr;
 
 	     return (<div>
 	     	     <p><span style={ style.textFont }>Download all sequences</span>:  
-		     <span style={ style.textFont }> <a href={ genomicFastaUrl } target='infowin'>Genomic DNA (.fsa)</a> | <a href={ genomicGcgUrl } target='infowin'>Genomic DNA (.gcg)</a> | <a href={ codingFastaUrl} target='infowin'>Coding DNA (.fsa)</a> | <a href={ codingGcgUrl } target='infowin'>Coding DNA (.gcg)</a> | <a href={ proteinFastaUrl} target='infowin'>Protein (.fsa)</a> | <a href={ proteinGcgUrl } target='infowin'>Protein (.gcg)</a></span></p>
+		     <span style={ style.textFont }> <a href={ genomicFastaUrl }>Genomic DNA (.fsa)</a> | <a href={ genomicGcgUrl }>Genomic DNA (.gcg)</a> | <a href={ codingFastaUrl }>Coding DNA (.fsa)</a> | <a href={ codingGcgUrl }>Coding DNA (.gcg)</a> | <a href={ proteinFastaUrl }>Protein (.fsa)</a> | <a href={ proteinGcgUrl }>Protein (.gcg)</a></span></p>
 		     </div>);
 	     
 	},
