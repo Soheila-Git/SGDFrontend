@@ -37,9 +37,10 @@ def do_seq_analysis(request):
     if p.get('format') is None:
         return Response(body=json.dumps(data), content_type='application/json')
     else:
-        response = display_sequence_for_genes(p, data)
-        return response
-        
+        # response = display_sequence_for_genes(p, data)
+        # return response
+        return Response(body=json.dumps(data), content_type='application/json')
+
 def run_emboss(p):
 
     emboss = p['emboss']
