@@ -25,10 +25,9 @@ def do_seq_analysis(request):
         if p.get('format') is None:
             return Response(body=json.dumps(data), content_type='application/json')
         else:
-            # response = display_sequence_for_chr(p, data)
-            # return response
-            return Response(body=json.dumps(data), content_type='application/json')
-
+            response = display_sequence_for_chr(p, data)
+            return response
+           
     if p.get('seq'):
         data = manipulate_sequence(p)
         return Response(body=json.dumps(data), content_type='application/json')
@@ -37,9 +36,9 @@ def do_seq_analysis(request):
     if p.get('format') is None:
         return Response(body=json.dumps(data), content_type='application/json')
     else:
-        # response = display_sequence_for_genes(p, data)
-        # return response
-        return Response(body=json.dumps(response), content_type='application/json')
+        response = display_sequence_for_genes(p, data)
+        return response
+        
 
 def run_emboss(p):
 
@@ -140,15 +139,10 @@ def display_sequence_for_genes(p, data):
         type = 'protein'
 
     content = ""
-    filename = ""    
     geneCount = len(data);
+    filename = ""
     for key in data:
         [gene, queryGene] = key.split("|"); 
-        if filename == '':
-            if geneCount == 1:
-                filename = gene
-            else:
-                filename = gene + "_etc_" + str(os.getpid())
         seqtypeInfo = data[key]
         for seqtype in seqtypeInfo:
             if seqtype != type:
@@ -165,7 +159,15 @@ def display_sequence_for_genes(p, data):
                     content += format_gcg(locusInfo.get('residue')) + "\n"
                 else:
                     content += format_fasta(locusInfo.get('residue')) + "\n" 
+                if filename == '':
+                    if geneCount == 1:
+                        filename = gene
+                    else:
+                        filename = gene + "_etc_" + str(os.getpid())
     
+    if filename == "":
+        filename = str(os.getpid())
+
     if p.get('format') is not None and p['format'] == 'gcg':
         filename += "_" + type + ".gcg"
     else:
@@ -174,9 +176,7 @@ def display_sequence_for_genes(p, data):
     if content == "":
         content = "No sequence available." 
 
-    return { "content": content }
-
-    return set_download_file(filename, content)
+    return set_download_file(filename, unicode(content))
 
 
 def set_download_file(filename, content):
