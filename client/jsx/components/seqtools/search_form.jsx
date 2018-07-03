@@ -1291,6 +1291,9 @@ const GeneSequenceResources = React.createClass({
 		  var links = "";
 		  var prev = "";
 		  var next = "";
+		  if (more >= 1) {
+		       more = 1;
+		  }
 		  for (var i = 1; i <= linkCount; i++) {
 		       if (links != "") {
 		       	  links += ", ";
