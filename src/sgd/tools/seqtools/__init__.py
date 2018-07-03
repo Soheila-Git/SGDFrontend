@@ -39,7 +39,7 @@ def do_seq_analysis(request):
     else:
         # response = display_sequence_for_genes(p, data)
         # return response
-        return Response(body=json.dumps(data), content_type='application/json')
+        return Response(body=json.dumps(response), content_type='application/json')
 
 def run_emboss(p):
 
@@ -173,6 +173,8 @@ def display_sequence_for_genes(p, data):
 
     if content == "":
         content = "No sequence available." 
+
+    return { "content": content }
 
     return set_download_file(filename, content)
 
