@@ -139,11 +139,14 @@ def display_sequence_for_genes(p, data):
 
     content = ""
     filename = ""    
+    geneCount = len(data);
     for key in data:
-        [gene, queryGene] = key.split("|");
-        if filename != "":
-            filename += "_"
-        filename += gene
+        [gene, queryGene] = key.split("|"); 
+        if filename == '':
+            if geneCount == 1:
+                filename = gene
+            else:
+                filename = gene + "_etc_" + str(os.getpid())
         seqtypeInfo = data[key]
         for seqtype in seqtypeInfo:
             if seqtype != type:
