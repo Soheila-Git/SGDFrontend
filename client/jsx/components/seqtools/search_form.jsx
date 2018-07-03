@@ -1235,7 +1235,7 @@ const GeneSequenceResources = React.createClass({
 	     var proteinGcgUrl = SeqtoolsUrl + "?format=gcg&type=protein&" + queryStr;
 
 	     return (<div>
-	     	     <p><h3>Download all sequences</h3>:  
+	     	     <p><span style={ style.textFont }>Download All Sequences</span>  
 		     <span style={ style.textFont }> <a href={ genomicFastaUrl }>Genomic DNA (.fsa)</a> | <a href={ genomicGcgUrl }>Genomic DNA (.gcg)</a> | <a href={ codingFastaUrl }>Coding DNA (.fsa)</a> | <a href={ codingGcgUrl }>Coding DNA (.gcg)</a> | <a href={ proteinFastaUrl }>Protein (.fsa)</a> | <a href={ proteinGcgUrl }>Protein (.gcg)</a></span></p>
 		     </div>);
 	     
@@ -1301,14 +1301,14 @@ const GeneSequenceResources = React.createClass({
 		       if (more == i) {
 		       	    links += i;
 			    if (prev == "" && i > 1) {
-			        prev = "<a href=href=/seqTools?" + moreLinkQueryStr + "&more=" + i-1 + "</a>";
+			        prev = "<a href=href=/seqTools?" + moreLinkQueryStr + "&more=" + str(i-1) + ">" + str(i-1) + "</a>";
 			    } 
 			    if (next == "" && i < linkCount) {
-			        next = "<a href=href=/seqTools?" + moreLinkQueryStr + "&more=" + i+1 + "</a>";
+			        next = "<a href=href=/seqTools?" + moreLinkQueryStr + "&more=" + str(i+1) + ">" + str(i+1) + "</a>";
 			    }    
 		       }
 		       else {
-		       	    links += "<a href=href=/seqTools?" + moreLinkQueryStr + "&more=" + i + "</a>";
+		       	    links += "<a href=href=/seqTools?" + moreLinkQueryStr + "&more=" + str(i) + ">" + str(i) + "</a>";
 		       }
 		  }		 
 
