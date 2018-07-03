@@ -25,8 +25,9 @@ def do_seq_analysis(request):
         if p.get('format') is None:
             return Response(body=json.dumps(data), content_type='application/json')
         else:
-            response = display_sequence_for_chr(p, data)
-            return response
+            # response = display_sequence_for_chr(p, data)
+            # return response
+            return Response(body=json.dumps(data), content_type='application/json')
 
     if p.get('seq'):
         data = manipulate_sequence(p)
@@ -128,8 +129,6 @@ def display_sequence_for_chr(p, data):
     return set_download_file(filename, unicode(content))
 
 def display_sequence_for_genes(p, data):
-
-    return data
 
     type = p.get('type')
     if type is None or type == 'genomic':
