@@ -1307,9 +1307,10 @@ const GeneSequenceResources = React.createClass({
 	     	  text += "<h3><font color='red'>You have selected the reverse complement of this gene/sequence list.</font></h3>";
 	     }   
 
-	     var queryStr = "genes=" + allGenes + "&strains=" + param['strains']+ extraParams;
+	     var strains = param['strains'];
+	     strains = strains.replace(/\+/, "|");
 
-	     queryStr = queryStr.replace(/+/g, "|");
+	     var queryStr = "genes=" + allGenes + "&strains=" + strains + extraParams;
 
 	     return [text, queryStr];
 
