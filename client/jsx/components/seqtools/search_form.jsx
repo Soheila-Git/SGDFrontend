@@ -1289,8 +1289,8 @@ const GeneSequenceResources = React.createClass({
 		  var linkCount = allGeneList.length/4 + 1;
 		  
 		  var links = "";
-		  var prev = "";
-		  var next = "";
+		  var prevLink = "";
+		  var nextLink = "";
 		  if (more >= 1) {
 		       more = 1;
 		  }
@@ -1300,23 +1300,26 @@ const GeneSequenceResources = React.createClass({
 		       }
 		       if (more == i) {
 		       	    links += i;
-			    if (prev == "" && i > 1) {
-			        prev = "<a href=href=/seqTools?" + moreLinkQueryStr + "&more=" + str(i-1) + ">" + str(i-1) + "</a>";
+			    var next = i + 1;
+			    var prev = curr - 1;
+			    if (prevLink == "" && i > 1) {
+			        prevLink = "<a href=href=/seqTools?" + moreLinkQueryStr + "&more=" + prev + ">" + prev + "</a>";
 			    } 
-			    if (next == "" && i < linkCount) {
-			        next = "<a href=href=/seqTools?" + moreLinkQueryStr + "&more=" + str(i+1) + ">" + str(i+1) + "</a>";
+			    if (nextLink == "" && i < linkCount) {
+			        nextLink = "<a href=href=/seqTools?" + moreLinkQueryStr + "&more=" + next + ">" + next + "</a>";
 			    }    
+			    links += i;
 		       }
 		       else {
-		       	    links += "<a href=href=/seqTools?" + moreLinkQueryStr + "&more=" + str(i) + ">" + str(i) + "</a>";
+		       	    links += "<a href=href=/seqTools?" + moreLinkQueryStr + "&more=" + i + ">" + i + "</a>";
 		       }
 		  }		 
 
-		  if (prev != "") {
-		       links = prev + " " + links;
+		  if (prevLink != "") {
+		       links = prevLink + " " + links;
 		  }
-		  if (next != "") {
-		       links += links + " " + next;
+		  if (nextLink != "") {
+		       links += links + " " + nextLink;
 		  }
 		  
 		  text += "<br></br><p>Display Gene Sets: " + links + "</p>";		 
