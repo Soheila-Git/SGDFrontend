@@ -129,6 +129,8 @@ def display_sequence_for_chr(p, data):
 
 def display_sequence_for_genes(p, data):
 
+    return set_download_file(filename, "no sequence available")
+
     type = p.get('type')
     if type is None or type == 'genomic':
         type = 'genomic_dna'
@@ -153,8 +155,6 @@ def display_sequence_for_genes(p, data):
                 continue
             strainInfo = seqtypeInfo[seqtype]
             allStrains = list(strainInfo.keys())
-            if len(allStrains) == 0:
-                continue
             if 'S288C' in strainInfo:
                 allStrains.remove('S288C')
                 allStrains = ['S288C'] + sorted(allStrains)
