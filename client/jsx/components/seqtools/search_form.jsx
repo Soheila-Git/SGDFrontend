@@ -1309,6 +1309,8 @@ const GeneSequenceResources = React.createClass({
 
 	     var queryStr = "genes=" + allGenes + "&strains=" + param['strains']+ extraParams;
 
+	     queryStr = queryStr.replace("%20", "|");
+
 	     return [text, queryStr];
 
        },
