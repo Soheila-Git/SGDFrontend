@@ -129,7 +129,7 @@ def display_sequence_for_chr(p, data):
 
 def display_sequence_for_genes(p, data):
 
-    return set_download_file(filename, "no sequence available")
+    return data
 
     type = p.get('type')
     if type is None or type == 'genomic':
@@ -173,6 +173,7 @@ def display_sequence_for_genes(p, data):
 
     if content == "":
         content = "No sequence available." 
+
     return set_download_file(filename, content)
 
 
