@@ -1236,8 +1236,8 @@ const GeneSequenceResources = React.createClass({
 	     var proteinGcgUrl = SeqtoolsUrl + "?format=gcg&type=protein" + queryStr;
 
 	     return (<div>
-	     	     <p>Download all sequences: 
-		     <span style={ style.textFont }><a href={ genomicFastaUrl } target='infowin'>Genomic (fsa)</a> | <a href={ genomicGcgUrl } target='infowin'>Genomics (gcg)</a> | <a href={ codingFastaUrl} target='infowin'>Coding (fsa)</a> | <a href={ codingGcgUrl } target='infowin'>Coding (gcg)</a> | <a href={ proteinFastaUrl} target='infowin'>Protein (fsa)</a> | <a href={ proteinGcgUrl } target='infowin'>Protein (gcg)</a></span></p>
+	     	     <p><span style={ style.textFont }>Download all sequences</span>:  
+		     <span style={ style.textFont }> <a href={ genomicFastaUrl } target='infowin'>Genomic (fsa)</a> | <a href={ genomicGcgUrl } target='infowin'>Genomics (gcg)</a> | <a href={ codingFastaUrl} target='infowin'>Coding (fsa)</a> | <a href={ codingGcgUrl } target='infowin'>Coding (gcg)</a> | <a href={ proteinFastaUrl} target='infowin'>Protein (fsa)</a> | <a href={ proteinGcgUrl } target='infowin'>Protein (gcg)</a></span></p>
 		     </div>);
 	     
 	},
