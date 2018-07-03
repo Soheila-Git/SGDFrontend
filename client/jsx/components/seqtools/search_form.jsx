@@ -87,7 +87,7 @@ const GeneSequenceResources = React.createClass({
 			     var [_geneList, _genes, _resultTable] = this.getResultTable4gene(data);
 			     var [_desc, _queryStr] = this.getDesc4gene(_geneList, _genes);
 
-			     var allDownloadLinks = this.getAllDownloadLinks(queryStr);
+			     var allDownloadLinks = this.getAllDownloadLinks(_queryStr);
 
 			     return (<div>
 					   <p dangerouslySetInnerHTML={{ __html: _desc }} />
