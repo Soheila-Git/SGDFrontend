@@ -14,7 +14,7 @@ const style = {
 const SeqtoolsUrl = "/run_seqtools";
 
 const MAX_GENE_TO_SHOW = 4;
-const MAX_GENE = 50;
+const MAX_GENE = 100;
 const MAX_SEQ_LENGTH_FOR_TOOLS = 20000;
 
 const GeneSequenceResources = React.createClass({
@@ -931,7 +931,7 @@ const GeneSequenceResources = React.createClass({
 			  
                 return (<div style={{ textAlign: "top" }}>
                         <h3>Enter a list of names:</h3>
-			<p>[space-separated standard gene names (and/or ORF and/or SGDID). <br></br>Example: SIR2 YHR023W SGD:S000000001. The maximum gene number for this search is 50. It will take first 50 genes if more than 50 are provided.] 
+			<p>[space-separated standard gene names (and/or ORF and/or SGDID). <br></br>Example: SIR2 YHR023W SGD:S000000001. The maximum gene number for this search is 50. It will take first { MAX_GENE } genes if more than { MAX_GENE } are provided.] 
 			<textarea ref='genes' name='genes' onChange={this.onChange} rows='2' cols='50'></textarea></p>
 			<h3><b>If available,</b> add flanking basepairs</h3>
 			<p>Upstream: <input type='text' ref='up' name='up' onChange={this.onChange} size='50'></input>
