@@ -14,7 +14,7 @@ const style = {
 const SeqtoolsUrl = "/run_seqtools";
 
 const MAX_GENE_TO_SHOW = 4;
-const MAX_GENE = 100;
+const MAX_GENE = 50;
 const MAX_SEQ_LENGTH_FOR_TOOLS = 20000;
 
 const GeneSequenceResources = React.createClass({
