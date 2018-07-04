@@ -1284,6 +1284,8 @@ const GeneSequenceResources = React.createClass({
 		  moreLinkQueryStr += extraParams;
 		  moreLinkQueryStr += "&submit=Submit+Form&more=1";
 
+		  console.log("moreLinkQueryStr="+moreLinkQueryStr);
+
 		  var linkCount = allGeneList.length/4;
 		  if (allGeneList.length%4 != 0) {
 		       linkCount += 1;
@@ -1299,7 +1301,7 @@ const GeneSequenceResources = React.createClass({
 		  } 
 		  for (var i = 1; i <= linkCount; i++) {
 		       if (links != "") {
-		       	  links += "&nbsp&nbsp";
+		       	  links += "&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp";
 		       }
 		       if (index == i) {
 		       	    links += i;
@@ -1311,7 +1313,6 @@ const GeneSequenceResources = React.createClass({
 			    if (nextLink == "" && i < linkCount) {
 			        nextLink = "<a href=/seqTools?" + moreLinkQueryStr + "&more=" + next + ">Next</a>";
 			    }    
-			    links += i;
 		       }
 		       else {
 		       	    links += "<a href=/seqTools?" + moreLinkQueryStr + "&more=" + i + ">" + i + "</a>";
@@ -1319,13 +1320,13 @@ const GeneSequenceResources = React.createClass({
 		  }		 
 
 		  if (prevLink != "") {
-		       links = prevLink + "&nbsp&nbsp&nbsp&nbsp&nbsp" + links;
+		       links = prevLink + "&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp" + links;
 		  }
 		  if (nextLink != "") {
-		       links = links + "&nbsp&nbsp&nbsp&nbsp&nbsp" + nextLink;
+		       links = links + "&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp" + nextLink;
 		  }
 		  
-		  text += "<br></br><p>Display Gene Sets: " + links + "</p>";		 
+		  text += "<br></br><p>Display Gene Sets:&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp" + links + "</p>";		 
 	     }
 
 	     if (up && down) {
