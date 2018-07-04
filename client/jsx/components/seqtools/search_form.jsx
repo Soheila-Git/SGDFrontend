@@ -1291,7 +1291,7 @@ const GeneSequenceResources = React.createClass({
              }
              for (var i = 1; i <= linkCount; i++) {
                   if (links != "") {
-                        links += "&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp";
+                        links += "&nbsp&nbsp&nbsp&nbsp";
                   }
                   if (index == i) {
                         links += i;
@@ -1310,10 +1310,10 @@ const GeneSequenceResources = React.createClass({
              }
 
              if (prevLink != "") {
-                   links = prevLink + "&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp" + links;
+                   links = prevLink + "&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp" + links;
              }
              if (nextLink != "") {
-                   links = links + "&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp" + nextLink;
+                   links = links + "&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp" + nextLink;
              }
 
              return "<h3><center>Display Gene Sets:&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp" + links + "</center></h3></center>";
