@@ -1284,7 +1284,10 @@ const GeneSequenceResources = React.createClass({
 		  moreLinkQueryStr += extraParams;
 		  moreLinkQueryStr += "&submit=Submit+Form&more=1";
 
-		  var linkCount = allGeneList.length/4 + 1;
+		  var linkCount = allGeneList.length/4;
+		  if (allGeneList.length%4 != 0) {
+		       linkCount += 1;
+		  }
 		  
 		  var links = "";
 		  var prevLink = "";
