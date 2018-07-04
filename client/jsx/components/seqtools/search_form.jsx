@@ -1101,9 +1101,10 @@ const GeneSequenceResources = React.createClass({
 		if (searchType == 'genes') {
 
 		   var more = param['more'];
-		   if (more > 0) {
+		   if (more > 1) {
 		        var displaySet = "";
 			var allGenes = window.localStorage.getItem("allGenes");
+			allGenes = allGenes.replace(/%0D%0/g, "|");
 			var allGeneList = allGenes.split("|");
 			for (var i = 0; i < allGeneList.list; i++) {
 			    if (i >= (more-1) * MAX_GENE_TO_SHOW && i < more * MAX_GENE_TO_SHOW) {
