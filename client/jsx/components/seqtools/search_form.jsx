@@ -943,7 +943,7 @@ const GeneSequenceResources = React.createClass({
                 return (<div>
                         <h3>Pick one or more strains:</h3>
                         { strainNode }
-			<p><input type="submit" ref='submit' name='submit' value="Submit Form" className="button secondary"></input> <input type="reset" ref='reset' name='reset' value="Reset Form" className="button secondary"></input></p>
+			<p><input type='hidden' name='more' value=1></input><input type="submit" ref='submit' name='submit' value="Submit Form" className="button secondary"></input> <input type="reset" ref='reset' name='reset' value="Reset Form" className="button secondary"></input></p>
                 </div>);
 
         },
@@ -1271,9 +1271,6 @@ const GeneSequenceResources = React.createClass({
 		      }
 		  });		 
 		 
-		  // text += ". No sequence available for the other gene(s)/feature(s) in the selected strain(s)."
-
-		  console.log("genes="+genes);
 		  text += ". No sequence available for <font color='red'>" + noSeqGenes + "</font> in the selected strain(s)in this gene set.";
 	     }
 	     
@@ -1291,9 +1288,7 @@ const GeneSequenceResources = React.createClass({
 		  var links = "";
 		  var prevLink = "";
 		  var nextLink = "";
-		  if (more >= 1) {
-		       more = 1;
-		  }
+		  
 		  for (var i = 1; i <= linkCount; i++) {
 		       if (links != "") {
 		       	  links += ", ";
@@ -1303,15 +1298,15 @@ const GeneSequenceResources = React.createClass({
 			    var next = i + 1;
 			    var prev = curr - 1;
 			    if (prevLink == "" && i > 1) {
-			        prevLink = "<a href=href=/seqTools?" + moreLinkQueryStr + "&more=" + prev + ">" + prev + "</a>";
+			        prevLink = "<a href=/seqTools?" + moreLinkQueryStr + "&more=" + prev + ">" + prev + "</a>";
 			    } 
 			    if (nextLink == "" && i < linkCount) {
-			        nextLink = "<a href=href=/seqTools?" + moreLinkQueryStr + "&more=" + next + ">" + next + "</a>";
+			        nextLink = "<a href=/seqTools?" + moreLinkQueryStr + "&more=" + next + ">" + next + "</a>";
 			    }    
 			    links += i;
 		       }
 		       else {
-		       	    links += "<a href=href=/seqTools?" + moreLinkQueryStr + "&more=" + i + ">" + i + "</a>";
+		       	    links += "<a href=/seqTools?" + moreLinkQueryStr + "&more=" + i + ">" + i + "</a>";
 		       }
 		  }		 
 
@@ -1338,7 +1333,7 @@ const GeneSequenceResources = React.createClass({
 	     text = "<h3>" + text + "</h3>";
 
 	     if (rev == 'on') {
-	     	  text += "<h3><font color='red'>You have selected the reverse complement of this gene/sequence list.</font></h3>";
+	     	  text += "<h2><font color='red'>You have selected the reverse complement of this gene/sequence list.</font></h2>";
 	     }   
 
 	     var queryStr = "genes=" + allGenes + "&strains=" + param['strains'] + extraParams;
