@@ -1114,7 +1114,7 @@ const GeneSequenceResources = React.createClass({
 				 displaySet += allGeneList[i];
 			    }
 			} 
-			console.log("displaySet="+ displaySet);
+			window.localStorage.getItem("displaySet", displaySet);
 			paramData['genes'] = displaySet;			
 		   }
 		   else {
@@ -1332,8 +1332,6 @@ const GeneSequenceResources = React.createClass({
 	     var extraParams = this.getExtraParams(param);
 
 	     var pickedSet = displaySetGenes.split('|');
-
-	     console.log("displaySetGenes=" + displaySetGenes);
 
 	     if (genes.length < pickedSet.length) {
 	          var noSeqGenes = "";
