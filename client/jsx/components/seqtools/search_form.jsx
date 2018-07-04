@@ -1295,7 +1295,7 @@ const GeneSequenceResources = React.createClass({
                         if (prevLink == "" && i > 1) {
                             prevLink = "<a href=/seqTools?" + moreLinkQueryStr + "&more=" + prev + ">Previous</a>";
                         }
-                        if (nextLink == "" && i < linkCount) {
+                        if (nextLink == "" && i < linkCount-1) {
                             nextLink = "<a href=/seqTools?" + moreLinkQueryStr + "&more=" + next + ">Next</a>";
                         }
                    }
@@ -1332,6 +1332,8 @@ const GeneSequenceResources = React.createClass({
 	     var extraParams = this.getExtraParams(param);
 
 	     var pickedSet = displaySetGenes.split('|');
+
+	     console.log("displaySetGenes=" + displaySetGenes);
 
 	     if (genes.length < pickedSet.length) {
 	          var noSeqGenes = "";
