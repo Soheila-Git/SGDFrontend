@@ -1299,17 +1299,17 @@ const GeneSequenceResources = React.createClass({
 		  } 
 		  for (var i = 1; i <= linkCount; i++) {
 		       if (links != "") {
-		       	  links += ", ";
+		       	  links += "&nbsp&nbsp";
 		       }
 		       if (index == i) {
 		       	    links += i;
 			    var next = i + 1;
 			    var prev = i - 1;
 			    if (prevLink == "" && i > 1) {
-			        prevLink = "<a href=/seqTools?" + moreLinkQueryStr + "&more=" + prev + ">" + prev + "</a>";
+			        prevLink = "<a href=/seqTools?" + moreLinkQueryStr + "&more=" + prev + ">Previous</a>";
 			    } 
 			    if (nextLink == "" && i < linkCount) {
-			        nextLink = "<a href=/seqTools?" + moreLinkQueryStr + "&more=" + next + ">" + next + "</a>";
+			        nextLink = "<a href=/seqTools?" + moreLinkQueryStr + "&more=" + next + ">Next</a>";
 			    }    
 			    links += i;
 		       }
@@ -1319,10 +1319,10 @@ const GeneSequenceResources = React.createClass({
 		  }		 
 
 		  if (prevLink != "") {
-		       links = prevLink + " " + links;
+		       links = prevLink + "&nbsp&nbsp&nbsp&nbsp&nbsp" + links;
 		  }
 		  if (nextLink != "") {
-		       links += links + " " + nextLink;
+		       links = links + "&nbsp&nbsp&nbsp&nbsp&nbsp" + nextLink;
 		  }
 		  
 		  text += "<br></br><p>Display Gene Sets: " + links + "</p>";		 
