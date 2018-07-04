@@ -1308,7 +1308,7 @@ const GeneSequenceResources = React.createClass({
                    links = links + "&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp" + nextLink;
              }
 
-             return "<h3><br></br><center><p>Display Gene Sets:&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp" + links + "</p></center></h3>";
+             return "<h3>Display Gene Sets:&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp" + links + "</center></h3>";
             
 	},
 
