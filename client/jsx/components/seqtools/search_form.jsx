@@ -1304,7 +1304,7 @@ const GeneSequenceResources = React.createClass({
 		       if (index == i) {
 		       	    links += i;
 			    var next = i + 1;
-			    var prev = curr - 1;
+			    var prev = i - 1;
 			    if (prevLink == "" && i > 1) {
 			        prevLink = "<a href=/seqTools?" + moreLinkQueryStr + "&more=" + prev + ">" + prev + "</a>";
 			    } 
