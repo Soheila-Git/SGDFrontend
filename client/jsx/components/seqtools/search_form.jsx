@@ -1236,7 +1236,7 @@ const GeneSequenceResources = React.createClass({
 	     var proteinGcgUrl = SeqtoolsUrl + "?format=gcg&type=protein&" + queryStr;
 
 	     return (<div>
-	     	     <p><span style={ style.textFont }>Download All Sequences</span>  
+	     	     <p><span style={ style.textFont }>Download All Sequences: </span>  
 		     <span style={ style.textFont }> <a href={ genomicFastaUrl }>Genomic DNA (.fsa)</a> | <a href={ genomicGcgUrl }>Genomic DNA (.gcg)</a> | <a href={ codingFastaUrl }>Coding DNA (.fsa)</a> | <a href={ codingGcgUrl }>Coding DNA (.gcg)</a> | <a href={ proteinFastaUrl }>Protein (.fsa)</a> | <a href={ proteinGcgUrl }>Protein (.gcg)</a></span></p>
 		     </div>);
 	     
