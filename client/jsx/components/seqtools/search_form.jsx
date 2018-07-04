@@ -1113,11 +1113,11 @@ const GeneSequenceResources = React.createClass({
 				 displaySet += allGeneList[i];
 			    }
 			} 
-			window.localStorage.setItem("displaySet", displaySet);
-			
+			paramData['genes'] = displaySet;			
 		   }
-		   
-		   paramData['genes'] = window.localStorage.getItem("genes");
+		   else {
+		   	paramData['genes'] = window.localStorage.getItem("genes");
+		   }
 		   paramData['strains'] = window.localStorage.getItem("strains");
 
 		   if (param['up']) {		   
