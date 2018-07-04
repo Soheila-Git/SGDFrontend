@@ -782,7 +782,7 @@ const GeneSequenceResources = React.createClass({
 
 	checkGenes(genes) {
 		
-		genes = genes.replace(/[^A-Za-z:\-0-9]/g, ' ');
+		genes = genes.replace(/[^A-Za-z:\-0-9\(\)]/g, ' ');
                 var re = /\+/g;
                 genes = genes.replace(re, " ");
                 var re = / +/g;
@@ -1344,7 +1344,7 @@ const GeneSequenceResources = React.createClass({
 		      }
 		  });		 
 		 
-		  text += ". No sequence available for <font color='red'>" + noSeqGenes + "</font> in the selected strain(s)in this gene set.";
+		  text += ". No sequence available for <font color='red'>" + noSeqGenes + "</font> in the selected strain(s) in this gene set.";
 	     }
 	     
 	     if (up && down) {
