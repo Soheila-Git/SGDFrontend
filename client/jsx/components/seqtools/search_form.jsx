@@ -1316,8 +1316,8 @@ const GeneSequenceResources = React.createClass({
                    links = links + "&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp" + nextLink;
              }
 
-             return "<h3><center>Display Gene Sets:&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp" + links + "</center></h3></center>";
-            
+             // return "<h3><center>Display Gene Sets:&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp" + links + "</center></h3></center>";
+             return "<h3><center>" + links + "</center></h3></center>";
 	},
 
         getDesc4gene(geneList, genes) {
