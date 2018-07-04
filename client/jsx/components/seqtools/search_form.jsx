@@ -1283,7 +1283,7 @@ const GeneSequenceResources = React.createClass({
 		  moreLinkQueryStr += "&strains=" + param['strains'];
 		  moreLinkQueryStr += extraParams;
 		  moreLinkQueryStr += "&submit=Submit+Form&more=1";
-
+		  moreLinkQueryStr = moreLinkQueryStr.replace(/ /g, "|");
 		  console.log("moreLinkQueryStr="+moreLinkQueryStr);
 
 		  var linkCount = allGeneList.length/4;
@@ -1326,7 +1326,7 @@ const GeneSequenceResources = React.createClass({
 		       links = links + "&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp" + nextLink;
 		  }
 		  
-		  text += "<br></br><p>Display Gene Sets:&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp" + links + "</p>";		 
+		  text += "<br></br><center><p>Display Gene Sets:&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp" + links + "</p></center>";		 
 	     }
 
 	     if (up && down) {
@@ -1339,7 +1339,7 @@ const GeneSequenceResources = React.createClass({
 	          text += " <b>plus " + down + " basepair(s) of downstream sequence.</b>";
 	     }
 
-	     text = "<h3>" + text + "</h3>";
+	     text = "<h2>" + text + "</h2>";
 
 	     if (rev == 'on') {
 	     	  text += "<h2><font color='red'>You have selected the reverse complement of this gene/sequence list.</font></h2>";
