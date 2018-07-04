@@ -14,7 +14,7 @@ const style = {
 const SeqtoolsUrl = "/run_seqtools";
 
 const MAX_GENE_TO_SHOW = 4;
-const MAX_GENE = 20;
+const MAX_GENE = 50;
 const MAX_SEQ_LENGTH_FOR_TOOLS = 20000;
 
 const GeneSequenceResources = React.createClass({
@@ -789,9 +789,14 @@ const GeneSequenceResources = React.createClass({
 
                 var geneList = genes.split(' ');
 
+		var max = geneList.length;
+		if (max > MAX_GENE) {
+		    max = MAX_GENE;
+		}
                 var displaySet = "";
                 var allGenes = "";
-                for (var i = 0; i < geneList.length; i++) {
+                for (var i = 0; i < max; i++) {
+
                     if (i < MAX_GENE_TO_SHOW) {
                          if (i >= 1) {
                               displaySet += "|";
@@ -804,7 +809,7 @@ const GeneSequenceResources = React.createClass({
                     allGenes += geneList[i];
                 }
 		
-		return [displaySet, allGenes, geneList.length];
+		return [displaySet, allGenes];
 
 	},
 
@@ -813,7 +818,7 @@ const GeneSequenceResources = React.createClass({
 		var genes = this.refs.genes.value.trim();
 		// var email = this.refs.email.value.trim();
 
-		var [displaySet, allGenes, geneCount] = this.checkGenes(genes);
+		var [displaySet, allGenes] = this.checkGenes(genes);
 		
 		if (displaySet == '') {
                      alert("Please enter one or more gene names.");
@@ -926,7 +931,7 @@ const GeneSequenceResources = React.createClass({
 			  
                 return (<div style={{ textAlign: "top" }}>
                         <h3>Enter a list of names:</h3>
-			<p>[space-separated standard gene names (and/or ORF and/or SGDID). <br></br>Example: SIR2 YHR023W SGD:S000000001. The maximum gene number for this search is 20. It will take first 20 genes if more than 20 are provided.] 
+			<p>[space-separated standard gene names (and/or ORF and/or SGDID). <br></br>Example: SIR2 YHR023W SGD:S000000001. The maximum gene number for this search is 50. It will take first 50 genes if more than 50 are provided.] 
 			<textarea ref='genes' name='genes' onChange={this.onChange} rows='2' cols='50'></textarea></p>
 			<h3><b>If available,</b> add flanking basepairs</h3>
 			<p>Upstream: <input type='text' ref='up' name='up' onChange={this.onChange} size='50'></input>
