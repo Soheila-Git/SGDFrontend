@@ -1264,7 +1264,7 @@ const GeneSequenceResources = React.createClass({
              var moreLinkQueryStr = "genes=" + allGenes;
              moreLinkQueryStr += "&strains=" + param['strains'];
              moreLinkQueryStr += extraParams;
-             moreLinkQueryStr += "&submit=Submit+Form&more=1";
+             moreLinkQueryStr += "&submit=Submit+Form";
              moreLinkQueryStr = moreLinkQueryStr.replace(/ /g, "|");
              console.log("moreLinkQueryStr="+moreLinkQueryStr);
 
