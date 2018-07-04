@@ -1253,7 +1253,7 @@ const GeneSequenceResources = React.createClass({
 	     var displaySetGenes = window.localStorage.getItem("displaySet");
 	     var allGenes = window.localStorage.getItem("allGenes");
 
-	     var text = "The currently selected gene(s)/sequence(s) are ";
+	     var text = "The currently displayed gene(s)/sequence(s) are ";
 	       
 	     text += "<font color='red'>" + geneList + "</font>";
 	     
