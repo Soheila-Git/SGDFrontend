@@ -168,10 +168,10 @@ const GeneSequenceResources = React.createClass({
 		var _nameSection = { headers: [[<span style={ style.textFont }><a name='gene'>1. Search a list of genes</a></span>, '']],
 			    	     rows:    [[geneNodeLeft, geneNodeRight]] };
 				     
-		var _chrSection = { headers: [[<span style={ style.textFont }><a name='gene'>2. Search a specified chromosomal region of S288C genome</a></span>, '']],
+		var _chrSection = { headers: [[<span style={ style.textFont }><strong style={{ color: 'red'}}>OR</strong><a name='gene'>2. Search a specified chromosomal region of S288C genome</a></span>, '']],
                                      rows:    [[chrNodeLeft, chrNodeRight]] };
 
-		var _seqSection = { headers: [[<span style={ style.textFont }><a name='gene'>3. Analyze a raw DNA or Protein sequence</a></span>, '']],
+		var _seqSection = { headers: [[<span style={ style.textFont }><strong style={{ color: 'red'}}>OR</strong><a name='gene'>3. Analyze a raw DNA or Protein sequence</a></span>, '']],
                                      rows:    [[seqNodeLeft, seqNodeRight]] };
 					
 		return (<div>
@@ -1004,9 +1004,10 @@ const GeneSequenceResources = React.createClass({
                        <h3>Pick a chromosome: </h3>
                        <p><select ref='chr' name='chr' onChange={this.onChangeGenome}>{_elements}</select></p>
 		       <p>Then enter coordinates (optional)
-		       <input type='text' ref='start' name='start' onChange={this.onChange} size='50'></input></p>
-		       <p>to
-                       <input type='text' ref='end' name='end' onChange={this.onChange} size='50'></input></p>
+		       <input type='text' ref='start' name='start' onChange={this.onChange} size='20'></input>
+		       to
+                       <input type='text' ref='end' name='end' onChange={this.onChange} size='20'></input>
+		       The entire chromosome sequence will be displayed if no coordinates are entered.</p>       
                 </div>);
  		 
 	},
@@ -1016,8 +1017,7 @@ const GeneSequenceResources = React.createClass({
 		var reverseCompNode = this.getReverseCompNode('rev2');
 
 	        return (<div>
-	          <p>The entire chromosome sequence will be displayed if no coordinates are entered.</p>
-                       <p><b>Note</b>: Enter coordinates in ascending order for the Watson strand and descending order for the Crick strand.</p>
+                       <p><b>Note</b>: Enter coordinates in ascending order for the Watson strand<br></br> and descending order for the Crick strand.</p>
                        { reverseCompNode }
                        <p><input type="submit" ref='submit2' name='submit2' value="Submit Form" className="button secondary"></input> <input type="reset" ref='reset2' name='reset2' value="Reset Form" className="button secondary"></input></p>
                 </div>);
