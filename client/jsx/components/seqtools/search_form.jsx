@@ -1004,10 +1004,10 @@ const GeneSequenceResources = React.createClass({
                        <h3>Pick a chromosome: </h3>
                        <p><select ref='chr' name='chr' onChange={this.onChangeGenome}>{_elements}</select></p>
 		       <p>Then enter coordinates (optional)
-		       <input type='text' ref='start' name='start' onChange={this.onChange} size='100'></input>
+		       <input type='text' ref='start' name='start' onChange={this.onChange} size='120'></input>
 		       to
-                       <input type='text' ref='end' name='end' onChange={this.onChange} size='100'></input>
-		       The entire chromosome sequence will be displayed if no coordinates are entered. &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp</p>       
+                       <input type='text' ref='end' name='end' onChange={this.onChange} size='120'></input>
+		       The entire chromosome sequence will be displayed if no coordinates are entered. </p>       
                 </div>);
  		 
 	},
