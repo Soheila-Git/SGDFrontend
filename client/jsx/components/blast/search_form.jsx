@@ -300,7 +300,9 @@ var SearchForm = React.createClass({
                 var database = data.database;
 		var datagroup = data.datagroup;
                 var _databaseDef = data.databasedef;
-		if (this.state.seqType == 'protein') {
+		
+		var param = this.state.param;
+		if (param['type'] == 'protein') {
 		       _databaseDef = ['YeastORF'];
 		}
                 var i = 0;
