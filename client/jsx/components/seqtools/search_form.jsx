@@ -1017,7 +1017,7 @@ const GeneSequenceResources = React.createClass({
 		var reverseCompNode = this.getReverseCompNode('rev2');
 
 	        return (<div>
-                       <p><b>Note</b>: Enter coordinates in ascending order for the Watson strand and descending order <br></br>for the Crick strand.</p>
+                       <p><b>Note</b>: Enter coordinates in ascending order for the Watson strand and <br></br>descending order for the Crick strand.</p>
                        { reverseCompNode }
                        <p><input type="submit" ref='submit2' name='submit2' value="Submit Form" className="button secondary"></input> <input type="reset" ref='reset2' name='reset2' value="Reset Form" className="button secondary"></input></p>
                 </div>);
