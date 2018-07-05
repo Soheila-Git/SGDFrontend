@@ -168,10 +168,10 @@ const GeneSequenceResources = React.createClass({
 		var _nameSection = { headers: [[<span style={ style.textFont }><a name='gene'>1. Search a list of genes</a></span>, '']],
 			    	     rows:    [[geneNodeLeft, geneNodeRight]] };
 				     
-		var _chrSection = { headers: [[<span style={ style.textFont }><strong style={{ color: 'red'}}>OR</strong> <a name='gene'>2. Search a specified chromosomal region of S288C genome</a></span>, '']],
+		var _chrSection = { headers: [[<span style={ style.textFont }><strong style={{ color: 'red'}}>OR</strong> <a name='chr'>2. Search a specified chromosomal region of S288C genome</a></span>, '']],
                                      rows:    [[chrNodeLeft, chrNodeRight]] };
 
-		var _seqSection = { headers: [[<span style={ style.textFont }><strong style={{ color: 'red'}}>OR</strong> <a name='gene'>3. Analyze a raw DNA or Protein sequence</a></span>, '']],
+		var _seqSection = { headers: [[<span style={ style.textFont }><strong style={{ color: 'red'}}>OR</strong> <a name='seq'>3. Analyze a raw DNA or Protein sequence</a></span>, '']],
                                      rows:    [[seqNodeLeft, seqNodeRight]] };
 					
 		return (<div>
