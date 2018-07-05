@@ -1032,7 +1032,7 @@ const GeneSequenceResources = React.createClass({
                        <h3>Type or Paste a: </h3>
 		       { seqtypeNode }
 		       <p>Sequence:
-                       <textarea ref='seq' name='seq' onChange={this.onChange} rows='4' cols='100'></textarea></p>
+                       <textarea ref='seq' name='seq' onChange={this.onChange} rows='3' cols='100'></textarea></p>
                 </div>);    
 
 	},
