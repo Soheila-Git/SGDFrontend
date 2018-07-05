@@ -303,7 +303,7 @@ var SearchForm = React.createClass({
 		
 		var param = this.state.param;
 		if (param['type'] == 'protein') {
-		       _databaseDef = ['YeastORF'];
+		       _databaseDef = ['YeastORF.fsa'];
 		}
                 var i = 0;
                 var _elements = _.map(database, d => {
