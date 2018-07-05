@@ -506,8 +506,8 @@ const GeneSequenceResources = React.createClass({
 
 	getToolsLinks4protein(seqID, seq) {
 			    
-		var blastButton = this.getToolButtonChr('/blast-sgd',  'BLAST', seqID);
-		var fungalBlastButton = this.getToolButtonChr('/blast-fungal', 'Fungal BLAST', seqID);
+		var blastButton = this.getToolButtonRawSeq('/blast-sgd',  'BLAST', seqID, "protein");
+		var fungalBlastButton = this.getToolButtonRawSeq('/blast-fungal', 'Fungal BLAST', seqID, "protein");
 
 		var seqlen = seq.length;
 
@@ -644,14 +644,32 @@ const GeneSequenceResources = React.createClass({
 
 	},
 
+	getToolButtonRawSeq(program, button, seqID, seqtype) {
+
+		if (seqtype != '') {
+		      return (<form method="GET" action={ program } target="toolwin">
+                                <input type="hidden" name="sequence_id" value={ seqID }  />
+                                <input type="hidden" name="type" value={ seqtype }  />
+                                <input type="submit" value={ button } style={ style.button }></input>
+                      </form>);
+                }
+                else {
+                      return (<form method="GET" action={ program } target="toolwin">
+                             <input type="hidden" name="sequence_id" value={ seqID }  />
+                             <input type="submit" value={ button } style={ style.button }></input>
+                      </form>);
+
+		}		     
+	},
+
 	getToolButtonChr(program, button, seqID, emboss) {
 
 		if (emboss != '') {	
-	                return (<form method="GET" action={ program } target="toolwin">
+	              return (<form method="GET" action={ program } target="toolwin">
                                 <input type="hidden" name="sequence_id" value={ seqID }  />
 				<input type="hidden" name="emboss" value={ emboss }  />
                                 <input type="submit" value={ button } style={ style.button }></input>
-                        </form>);
+                      </form>);
 		}
 		else {
 		     return (<form method="GET" action={ program } target="toolwin">
