@@ -13,12 +13,15 @@ const style = {
 
 const SeqtoolsUrl = "/run_seqtools";
 
+const MAX_GENE_TO_SHOW = 4;
+const MAX_GENE = 50;
+const MAX_SEQ_LENGTH_FOR_TOOLS = 20000;
+
 const GeneSequenceResources = React.createClass({
 
 	getInitialState() {
 	        
 		var param = Params.getParams();
-		
 		return {
 			isComplete: false,
 			isPending: false,
@@ -68,18 +71,28 @@ const GeneSequenceResources = React.createClass({
 			var data = this.state.resultData;
 			
 			if (param['submit']) {
+
+			     var genes = Object.keys(data).sort();
 			
+			     if(genes.length == 0) {
+				  return(<div><span style={ style.textFont }>No sequence available for the input gene(s)/feature(s) in the selected strain(s)</span></div>);
+			     }			
+
 			     if (data['ERROR']) {
 			     	
 				  return (<div><span style={ style.textFont }>{ data['ERROR'] }</span></div>); 
 
 			     }
    
-			     var [_geneList, _resultTable] = this.getResultTable4gene(data);
-			     var _desc = this.getDesc4gene(_geneList);
+			     var [_geneList, _genes, _resultTable] = this.getResultTable4gene(data);
+			     var [_desc, _queryStr] = this.getDesc4gene(_geneList, _genes);
+			     var _geneSetLinks = this.getGeneSetLinks();
+			     var _allDownloadLinks = this.getAllDownloadLinks(_queryStr);
 
 			     return (<div>
 					   <p dangerouslySetInnerHTML={{ __html: _desc }} />
+					   { _allDownloadLinks }
+					   <p dangerouslySetInnerHTML={{ __html: _geneSetLinks }} />
 			                   <p>{ _resultTable } </p>
 			             </div>);
 
@@ -147,14 +160,19 @@ const GeneSequenceResources = React.createClass({
 
 		var geneNodeLeft = this.getGeneNodeLeft();
                 var geneNodeRight = this.getGeneNodeRight();
-                var chrNode = this.getChrNode();
-               	var seqNode = this.getSeqNode();
+                var chrNodeLeft = this.getChrNodeLeft();
+               	var chrNodeRight = this.getChrNodeRight();
+		var seqNodeLeft = this.getSeqNodeLeft();
+		var seqNodeRight = this.getSeqNodeRight();
 
 		var _nameSection = { headers: [[<span style={ style.textFont }><a name='gene'>1. Search a list of genes</a></span>, '']],
 			    	     rows:    [[geneNodeLeft, geneNodeRight]] };
 				     
-		var _chrSeqSection = { headers: [[<span style={ style.textFont }><strong style={{ color: 'red'}}>OR</strong> <a name='chr'>2. Search a specified chromosomal region</a></span>, '', '', <span style={ style.textFont }><strong style={{ color: 'red'}}>OR</strong> <a name='seq'>3. Analyze a raw DNA or Protein sequence</a></span>]],
-                                       rows:    [[chrNode, '', '', seqNode]] };
+		var _chrSection = { headers: [[<span style={ style.textFont }><strong style={{ color: 'red'}}>OR</strong> <a name='chr'>2. Search a specified chromosomal region of S288C genome</a></span>, '']],
+                                     rows:    [[chrNodeLeft, chrNodeRight]] };
+
+		var _seqSection = { headers: [[<span style={ style.textFont }><strong style={{ color: 'red'}}>OR</strong> <a name='seq'>3. Analyze a raw DNA or Protein sequence</a></span>, '']],
+                                     rows:    [[seqNodeLeft, seqNodeRight]] };
 					
 		return (<div>
 			<div dangerouslySetInnerHTML={{ __html: descText}} />
@@ -163,7 +181,12 @@ const GeneSequenceResources = React.createClass({
 			     	  <form onSubmit={this.onSubmit} target="infowin">
 				        <DataTable data={_nameSection} />
 			          </form>
-			         <DataTable data={_chrSeqSection} />        
+				  <form onSubmit={this.onSubmit2} target="infowin">
+                                        <DataTable data={_chrSection} />
+                                  </form>
+				  <form onSubmit={this.onSubmit3} target="infowin">
+                                        <DataTable data={_seqSection} />
+                                  </form>
 			     </div>
 			</div>
 		</div>);
@@ -172,16 +195,15 @@ const GeneSequenceResources = React.createClass({
 
 	getComplementBox(seq) {
 
-	     var param = this.state.param;
-	     var rev = param['rev3'];
+	        var param = this.state.param;
+	        var rev = param['rev3'];
 
-	     if (rev == 'on') {
-	     	  return (<div><h3>The reverse complement of this sequence:</h3><p><textarea value={ seq } rows='7' cols='200'></textarea></p></div>);
-	     }
-	     else {
-	     	  return (<div></div>);
-	     }
-
+	        if (rev == 'on' && param['seqtype'] == 'DNA') {
+	     	      return (<div><h3>The reverse complement of this sequence:</h3><p><textarea value={ seq } rows='7' cols='200'></textarea></p></div>);
+	        }
+	        else {
+	     	      return (<div></div>);
+	        }
 	},
 
 	getResultTable4seq(seq) {
@@ -230,7 +252,11 @@ const GeneSequenceResources = React.createClass({
 		// browser row
 
                 var browserRow = [<span style={ style.textFont }>Genome Display (S288C)</span>];
-                var url = "https://browse.yeastgenome.org/?loc=" + chr + ":" + start + ".." + end;;
+		
+		var url = "https://browse.yeastgenome.org/?loc=chr" + chr;
+		if (typeof(start) != "undefined") {
+                   url += ":" + start + ".." + end;
+		}
                 browserRow.push(<span style={ style.textFont }><a href={ url } target='infowin2'>JBrowse</a></span>);
                 rows.push(browserRow);
 
@@ -256,8 +282,8 @@ const GeneSequenceResources = React.createClass({
 	},
 
 	getResultTable4gene(data) {
-		
-		var [genes, displayName4gene, sgdid4gene, seq4gene, hasProtein4gene, hasCoding4gene, hasGenomic4gene] 
+
+		var [genes, displayName4gene, sgdid4gene, seq4gene, hasProtein4gene, hasCoding4gene, hasGenomic4gene, chrCoords4gene, queryGeneList] 
 			= this.getDataFromJson4gene(data);
 		
 		var param = this.state.param; 
@@ -285,7 +311,7 @@ const GeneSequenceResources = React.createClass({
 		_.map(genes, gene => { 
 		    var sgdUrl = "https://www.yeastgenome.org/locus/" + sgdid4gene[gene];
 		    var allianceUrl = "http://www.alliancegenome.org/gene/" + sgdid4gene[gene];
-		    locusRow.push(<span style={ style.textFont }><a href={ sgdUrl } target='infowin2'>SGD</a> | <a href={ allianceUrl } target='infowin2'>Alliance</a></span>);
+		    locusRow.push(<span style={ style.textFont }><a href={ sgdUrl } target='infowin2'>SGD</a> | <a href={ allianceUrl } target='infowin2'>Alliance</a></span>); 
 		});	
 		rows.push(locusRow);
 
@@ -303,14 +329,18 @@ const GeneSequenceResources = React.createClass({
                 var hasSeq = hasProtein + hasCoding + hasGenomic;
 		    
 		if (hasSeq == 0) {
-		     return this.display_gene_table(headerRow, rows)
+		     return (<div>No sequence for selected genes</div>);
 		}    
 
 	        // browser row
 
        		var browserRow = [<span style={ style.textFont }>Genome Display (S288C)</span>];
 		_.map(genes, gene => {
-                    var url = "https://browse.yeastgenome.org/?loc=" + gene;
+		    var chrCoords = chrCoords4gene[gene];
+		    var chr = chrCoords['chr'];
+		    var start = chrCoords['start'];
+		    var end = chrCoords['end'];
+		    var url = "https://browse.yeastgenome.org/?loc=chr" + chr + ":" + start + ".." + end + "&tracks=All%20Annotated%20Sequence%20Features%2CProtein-Coding-Genes%2CDNA&highlight="; 
                     browserRow.push(<span style={ style.textFont }><a href={ url } target='infowin2'>JBrowse</a></span>);
                 });
                 rows.push(browserRow);		
@@ -318,19 +348,34 @@ const GeneSequenceResources = React.createClass({
 		// alignment row
 
 		var alignRow = [<span style={ style.textFont }>Alignment/Variation</span>];
+		var hasRow = 0;
 		_.map(genes, gene => {
-		     var variantUrl = "https://www.yeastgenome.org/variant-viewer#/" + sgdid4gene[gene].replace("SGD:", "");
-		     var strainUrl = "https://www.yeastgenome.org/cgi-bin/FUNGI/alignment.pl?locus=" + gene;
-		     var fungalUrl = "https://www.yeastgenome.org/cache/fungi/" + gene + ".html";
-		     alignRow.push(<span style={ style.textFont }><br><a href={ variantUrl } target='infowin2'>Variant Viewer</a></br><br><a href={ strainUrl } target='infowin2'>Strain Alignment</a></br><br><a href={ fungalUrl } target='infowin2'>Fungal Alignment</a></br></span>);
+		     var chrCoords = chrCoords4gene[gene];
+                     var locus_type = chrCoords['locus_type'];
+		     
+		     if (locus_type == 'ORF') {
+		     	  var variantUrl = "https://www.yeastgenome.org/variant-viewer#/" + sgdid4gene[gene].replace("SGD:", "");
+		     	  var strainUrl = "https://www.yeastgenome.org/cgi-bin/FUNGI/alignment.pl?locus=" + gene;
+		     	  var fungalUrl = "https://www.yeastgenome.org/cache/fungi/" + gene + ".html";
+		     	  alignRow.push(<span style={ style.textFont }><br><a href={ variantUrl } target='infowin2'>Variant Viewer</a></br><br><a href={ strainUrl } target='infowin2'>Strain Alignment</a></br><br><a href={ fungalUrl } target='infowin2'>Fungal Alignment</a></br></span>);	
+			  hasRow = hasRow + 1;		
+		     }
+		     else {
+		     	  alignRow.push(<span> - </span>);
+		     }
 		});
-		rows.push(alignRow);
-		
+		if (hasRow > 0) {
+		     rows.push(alignRow);
+		}
+
 		// sequence download row
 		
 		var seqDLRow = [];
-		if (hasCoding > 0) { 
+		if (hasCoding > 0 && hasProtein > 0) { 
 		     seqDLRow = [<span style={ style.textFont }><br>Sequence Downloads</br><br>* DNA of Region</br><br>* Coding Sequence of Selected ORF</br><br>* Protein Translation of Selected ORF</br></span>];
+		}
+		else if (hasCoding > 0) {
+		     seqDLRow = [<span style={ style.textFont }><br>Sequence Downloads</br><br>* DNA of Region</br><br>* Coding Sequence of Selected Gene</br></span>];
 		}
 		else {
 		     seqDLRow = [<span style={ style.textFont }><br>Sequence Downloads</br><br>* DNA of Region</br></span>];
@@ -363,11 +408,30 @@ const GeneSequenceResources = React.createClass({
                     var	codingGcgUrl = SeqtoolsUrl + "?format=gcg&type=coding" + queryStr + extraParams;
 		    var proteinFastaUrl = SeqtoolsUrl + "?format=fasta&type=protein" + queryStr + extraParams;
                     var	proteinGcgUrl = SeqtoolsUrl + "?format=gcg&type=protein" + queryStr + extraParams;
-		    if (hasCoding > 0) {
+		    var thisHasCoding = hasCoding4gene[gene];
+		    var thisHasProtein = hasProtein4gene[gene];
+		    var thisHasGenomic = hasGenomic4gene[gene]; 
+		    if (thisHasProtein > 0) {
 		         seqDLRow.push(<span style={ style.textFont}><br></br><br><a href={ genomicFastaUrl } target='infowin'>Fasta</a> | <a href={ genomicGcgUrl } target='infowin'>GCG</a></br><br><a href={ codingFastaUrl } target='infowin'>Fasta</a> | <a href={ codingGcgUrl } target='infowin'>GCG</a></br><br><a href={ proteinFastaUrl } target='infowin'>Fasta</a> | <a href={ proteinGcgUrl } target='infowin'>GCG</a></br></span>);
 		    }
+		    else if (thisHasCoding > 0) {
+		    	 if (hasProtein > 0) {
+		    	    seqDLRow.push(<span style={ style.textFont}><br></br><br><a href={ genomicFastaUrl } target='infowin'>Fasta</a> | <a href={ genomicGcgUrl } target='infowin'>GCG</a></br><br><a href={ codingFastaUrl } target='infowin'>Fasta</a> | <a href={ codingGcgUrl } target='infowin'>GCG</a></br><br> - </br></span>);
+			 }
+			 else {
+			      seqDLRow.push(<span style={ style.textFont}><br></br><br><a href={ genomicFastaUrl } target='infowin'>Fasta</a> | <a href={ genomicGcgUrl } target='infowin'>GCG</a></br><br><a href={ codingFastaUrl } target='infowin'>Fasta</a> | <a href={ codingGcgUrl } target='infowin'>GCG</a></br></span>);
+			 }
+		    }
 		    else {
-		    	 seqDLRow.push(<span style={ style.textFont }><br></br><br><a href={ genomicFastaUrl } target='infowin'>Fasta</a> | <a href={ genomicGcgUrl } target='infowin'>GCG</a></br></span>);
+		         if (hasCoding > 0 && hasProtein > 0) {
+		    	      seqDLRow.push(<span style={ style.textFont }><br></br><br><a href={ genomicFastaUrl } target='infowin'>Fasta</a> | <a href={ genomicGcgUrl } target='infowin'>GCG</a></br><br> - </br><br> - </br></span>);
+			 }
+			 else if (hasCoding > 0) {
+			      seqDLRow.push(<span style={ style.textFont }><br></br><br><a href={ genomicFastaUrl } target='infowin'>Fasta</a> | <a href={ genomicGcgUrl } target='infowin'>GCG</a></br><br> - </br></span>); 
+			 }
+			 else {
+			      seqDLRow.push(<span style={ style.textFont }><br></br><br><a href={ genomicFastaUrl } target='infowin'>Fasta</a> | <a href={ genomicGcgUrl } target='infowin'>GCG</a></br></span>);
+			 }
 		    } 
 	        });
 		rows.push(seqDLRow);
@@ -388,7 +452,7 @@ const GeneSequenceResources = React.createClass({
 		});		
 		rows.push(seqAnalRow);
 
-		return [geneList, this.display_result_table(headerRow, rows)];		
+		return [geneList, queryGeneList, this.display_result_table(headerRow, rows)];		
 		
 	},
 
@@ -405,7 +469,10 @@ const GeneSequenceResources = React.createClass({
 		var seqlen = seq.length;
 
 		if (seqlen > 20) {
-                     return(<div className="row">
+		      
+		     if (seq.length <= MAX_SEQ_LENGTH_FOR_TOOLS) {
+
+                     	  return(<div className="row">
                                  <div className="large-12 columns">
                                       { blastButton }
                                       { fungalBlastButton }
@@ -414,7 +481,17 @@ const GeneSequenceResources = React.createClass({
 				      { translatedProteinButton }
 				      { sixframeButton }
                                  </div>
-                     </div>);
+                          </div>);
+	             }
+		     else {
+
+		     	  return(<div className="row">
+                                 <div className="large-12 columns">
+                                      { blastButton }
+                                      { fungalBlastButton }
+                                 </div>
+                          </div>);
+		     }
 		}
 		else {
 
@@ -438,8 +515,8 @@ const GeneSequenceResources = React.createClass({
 
 	getToolsLinks4protein(seqID, seq) {
 			    
-		var blastButton = this.getToolButtonChr('/blast-sgd',  'BLAST', seqID);
-		var fungalBlastButton = this.getToolButtonChr('/blast-fungal', 'Fungal BLAST', seqID);
+		var blastButton = this.getToolButtonRawSeq('/blast-sgd',  'BLAST', seqID, "protein");
+		var fungalBlastButton = this.getToolButtonRawSeq('/blast-fungal', 'Fungal BLAST', seqID, "protein");
 
 		var seqlen = seq.length;
 
@@ -473,21 +550,34 @@ const GeneSequenceResources = React.createClass({
 			    
                 var blastButton = this.getToolButtonChr('/blast-sgd',  'BLAST', seqID, '');
                 var fungalBlastButton = this.getToolButtonChr('/blast-fungal', 'Fungal BLAST', seqID, '');
-                var primerButton = this.getToolButtonChr('/primer3', 'Design Primers', seqID, '');
-                var restrictionButton = this.getToolButtonChr4post('https://www.yeastgenome.org/cgi-bin/PATMATCH/RestrictionMapper', 'Genome Restriction Map', seq);
-		var restrictFragmentsButton = this.getToolButtonChr('/seqTools', 'Restriction Fragments', seqID, 'restrict');
-                var sixframeButton = this.getToolButtonChr('/seqTools', '6 Frame Translation', seqID, 'remap');
 		
-                return(<div className="row">
-                            <div className="large-12 columns">
-                                 { blastButton }
-                                 { fungalBlastButton }
-                                 { primerButton }
-                                 { restrictionButton }
-				 { restrictFragmentsButton }
-				 { sixframeButton }
-                            </div>
-                </div>);
+		if (seq.length <= MAX_SEQ_LENGTH_FOR_TOOLS) {
+
+		     var primerButton = this.getToolButtonChr('/primer3', 'Design Primers', seqID, '');
+                     var restrictionButton = this.getToolButtonChr4post('https://www.yeastgenome.org/cgi-bin/PATMATCH/RestrictionMapper', 'Genome Restriction Map', seq);
+                     var restrictFragmentsButton = this.getToolButtonChr('/seqTools', 'Restriction Fragments', seqID, 'restrict');
+                     var sixframeButton = this.getToolButtonChr('/seqTools', '6 Frame Translation', seqID, 'remap');
+
+                     return(<div className="row">
+                               <div className="large-12 columns">
+                                    { blastButton }
+                                    { fungalBlastButton }
+                                    { primerButton }
+                                    { restrictionButton }
+				    { restrictFragmentsButton }
+				    { sixframeButton }
+                               </div>
+                     </div>);
+		}
+		else {
+
+		     return(<div className="row">
+                               <div className="large-12 columns">
+                                    { blastButton }
+                                    { fungalBlastButton }
+                               </div>
+                     </div>);
+		}
 
 	},
 
@@ -563,14 +653,32 @@ const GeneSequenceResources = React.createClass({
 
 	},
 
+	getToolButtonRawSeq(program, button, seqID, seqtype) {
+
+		if (seqtype != '') {
+		      return (<form method="GET" action={ program } target="toolwin">
+                                <input type="hidden" name="sequence_id" value={ seqID }  />
+                                <input type="hidden" name="type" value={ seqtype }  />
+                                <input type="submit" value={ button } style={ style.button }></input>
+                      </form>);
+                }
+                else {
+                      return (<form method="GET" action={ program } target="toolwin">
+                             <input type="hidden" name="sequence_id" value={ seqID }  />
+                             <input type="submit" value={ button } style={ style.button }></input>
+                      </form>);
+
+		}		     
+	},
+
 	getToolButtonChr(program, button, seqID, emboss) {
 
 		if (emboss != '') {	
-	                return (<form method="GET" action={ program } target="toolwin">
+	              return (<form method="GET" action={ program } target="toolwin">
                                 <input type="hidden" name="sequence_id" value={ seqID }  />
 				<input type="hidden" name="emboss" value={ emboss }  />
                                 <input type="submit" value={ button } style={ style.button }></input>
-                        </form>);
+                      </form>);
 		}
 		else {
 		     return (<form method="GET" action={ program } target="toolwin">
@@ -627,15 +735,22 @@ const GeneSequenceResources = React.createClass({
 
 	getDataFromJson4gene(data) {
 	        
-		var genes = Object.keys(data).sort();
+		var keys = Object.keys(data).sort();
 		var displayName4gene = {};
 		var sgdid4gene = {};
+		var featureType4gene = {};
 		var hasProtein4gene = {};
 		var hasCoding4gene = {};
 		var hasGenomic4gene = {};
 		var seq4gene = {}
-		_.map(genes, gene => {
-                      var seqInfo = data[gene];
+		var chrCoords4gene = {}
+		var queryGeneList = []
+		var genes = []
+		_.map(keys, key => {
+		      var [gene, queryGene] = key.split("|");
+		      queryGeneList.push(queryGene);
+		      genes.push(gene);
+                      var seqInfo = data[key];
                       var proteinSeq4strain = {};
                       var codingSeq4strain = {};
                       var genomicSeq4strain = {};
@@ -644,9 +759,13 @@ const GeneSequenceResources = React.createClass({
 		      hasCoding4gene[gene] = 0;
 		      hasGenomic4gene[gene] = 0;
                       _.map(seqTypes, seqType => {
-                             var strainInfo = seqInfo[seqType];
-                             var strains = Object.keys(strainInfo);
-                             _.map(strains, strain => {
+			     if (seqType == 'chr_coords') {
+			     	chrCoords4gene[gene] = seqInfo[seqType];
+			     }
+			     else {
+                             	var strainInfo = seqInfo[seqType];
+                             	var strains = Object.keys(strainInfo);
+                             	_.map(strains, strain => {
                                     var strainDetails = strainInfo[strain];
                                     if (typeof(displayName4gene[gene]) == "undefined") {
                                         var display_name = strainDetails['display_name'];
@@ -659,7 +778,6 @@ const GeneSequenceResources = React.createClass({
 					sgdid4gene[gene] = strainDetails['sgdid'];
                                     }
 				    // var headline = strainDetails['headline'];
-				    // var locus_type = strainDetails['locus_type'];
 				    
                                     if (seqType == 'protein') {
                                          proteinSeq4strain[strain] = strainDetails['residue'];
@@ -673,8 +791,8 @@ const GeneSequenceResources = React.createClass({
                                          genomicSeq4strain[strain] = strainDetails['residue'];
 					 hasGenomic4gene[gene] += 1;
                                     }
-				    
-                             })
+				})    
+                             }
 
                       })
 
@@ -685,31 +803,68 @@ const GeneSequenceResources = React.createClass({
 
                 });
 
-		return [genes, displayName4gene, sgdid4gene, seq4gene, hasProtein4gene, hasCoding4gene, hasGenomic4gene];
+		return [genes, displayName4gene, sgdid4gene, seq4gene, hasProtein4gene, hasCoding4gene, hasGenomic4gene, chrCoords4gene, queryGeneList];
 			  
 	},
 
+	checkGenes(genes) {
+		
+		genes = genes.replace(/[^A-Za-z:\-0-9\(\)]/g, ' ');
+                var re = /\+/g;
+                genes = genes.replace(re, " ");
+                var re = / +/g;
+
+                var geneList = genes.split(' ');
+
+		var max = geneList.length;
+		if (max > MAX_GENE) {
+		    max = MAX_GENE;
+		}
+                var displaySet = "";
+                var allGenes = "";
+                for (var i = 0; i < max; i++) {
+
+                    if (i < MAX_GENE_TO_SHOW) {
+                         if (i >= 1) {
+                              displaySet += "|";
+                         }
+                         displaySet += geneList[i];
+                    }
+		    if (i >= 1) {
+                         allGenes += "|";
+                    }
+                    allGenes += geneList[i];
+                }
+		
+		return [displaySet, allGenes];
+
+	},
 
 	onSubmit(e) {
 		
 		var genes = this.refs.genes.value.trim();
-		genes = genes.replace(/[^A-Za-z:\-0-9]/g, ' ');
-		var re = /\+/g;
-		genes = genes.replace(re, " ");		
-		var re = / +/g;
-		genes = genes.replace(re, "|");
-		if (genes == '') {
-		   alert("Please enter one or more gene names.");
-		   e.preventDefault();
-                   return 1;
-		}
+		// var email = this.refs.email.value.trim();
 
-		// this.setState({ notFound: "" });
-		// this.validateGenes(genes);		
-		// var not_found = this.state.notFound;
-		// if (not_found != "") {
-		//        e.preventDefault();
-		//	return 1;
+		var [displaySet, allGenes] = this.checkGenes(genes);
+		
+		if (displaySet == '') {
+                     alert("Please enter one or more gene names.");
+                     e.preventDefault();
+                     return 1;
+                }
+
+		// if (geneCount > MAX_GENE && email == "") { 
+                //     alert("Please enter an email address in the email box so we can send the sequences to you.");
+		//     e.preventDefault();
+                //     return 1;
+                // }
+		
+		// if (email != "") {
+		//     if (email.match(/\@/g) == null) {
+                //     	  alert("Please enter a valid email address");
+                //     	  e.preventDefault();
+                //     	  return 1;
+		//     }		   
 		// }
 
 		var up = this.refs.up.value.trim();
@@ -740,9 +895,10 @@ const GeneSequenceResources = React.createClass({
 		}	
 	
 		window.localStorage.clear();
-                window.localStorage.setItem("genes", genes);
+                window.localStorage.setItem("genes", displaySet);
+		window.localStorage.setItem("displaySet", displaySet);
                 window.localStorage.setItem("strains", strains);
-
+		window.localStorage.setItem("allGenes", allGenes);
 	},
 
 	onSubmit2(e) {
@@ -767,7 +923,7 @@ const GeneSequenceResources = React.createClass({
 	onSubmit3(e) {
 
                 var seq = this.refs.seq.value.trim();
-		seq = seq.replace(/[^A-Za-z]/g, '');	
+		seq = seq.replace(/[^A-Za-z]/g, "");	
                 if (seq == '') {
                    alert("Please enter a raw sequence.");
                    e.preventDefault();
@@ -785,21 +941,29 @@ const GeneSequenceResources = React.createClass({
                        return 1;     
 		   }
 		}
+		else {
+		   if (seq.match(/^[ATCGatcg]+$/g) !== null) {
+		       alert("Looks like you are entering a DNA sequence instead of PROTEIN sequence. Please pick a right sequence type and try it again.");
+                       e.preventDefault();
+                       return 1;
+		   }
+		   
+		}
 
         },
 
 	getGeneNodeLeft() {
-			  
-	        var reverseCompNode = this.getReverseCompNode('rev1');
 
+		var reverseCompNode = this.getReverseCompNode('rev1');
+			  
                 return (<div style={{ textAlign: "top" }}>
                         <h3>Enter a list of names:</h3>
-			<p>(space-separated gene names (and/or ORF and/or SGDID). Example: ACT1 YHR023W SGD:S000000001) 
+			<p>[space-separated standard gene names (and/or ORF and/or SGDID). <br></br>Example: SIR2 YHR023W SGD:S000000001. The maximum gene number for this search is { MAX_GENE }. It will take first { MAX_GENE } genes if more than { MAX_GENE } are provided.] 
 			<textarea ref='genes' name='genes' onChange={this.onChange} rows='2' cols='50'></textarea></p>
 			<h3><b>If available,</b> add flanking basepairs</h3>
 			<p>Upstream: <input type='text' ref='up' name='up' onChange={this.onChange} size='50'></input>
 			Downstream: <input type='text' ref='down' name='down' onChange={this.onChange} size='50'></input></p>
-			{ reverseCompNode }			
+			{ reverseCompNode }
                 </div>);
 
         },
@@ -807,16 +971,18 @@ const GeneSequenceResources = React.createClass({
 	getGeneNodeRight() {
 
                 var strainNode = this.getStrainNode();
+		var reverseCompNode = this.getReverseCompNode('rev1');
 
                 return (<div>
                         <h3>Pick one or more strains:</h3>
                         { strainNode }
-			<p><input type="submit" ref='submit' name='submit' value="Submit Form" className="button secondary"></input> <input type="reset" ref='reset' name='reset' value="Reset Form" className="button secondary"></input></p>
+			<p><input type='hidden' name='more' value='1'></input>
+			<input type="submit" ref='submit' name='submit' value="Submit Form" className="button secondary"></input> <input type="reset" ref='reset' name='reset' value="Reset Form" className="button secondary"></input></p>
                 </div>);
 
         },
 
-	getChrNode() {
+	getChrNodeLeft() {
 		 		    	      
 		var chr2num = { '-- choose a chromosome --': 0, 
 		    	        'I': 1, 'II': 2, 'III': 3, 'IV': 4, 'V': 5, 'VI': 6,
@@ -834,43 +1000,54 @@ const GeneSequenceResources = React.createClass({
                        }
                 });
 		
-		var reverseCompNode = this.getReverseCompNode('rev2');
-
                 return(<div>
-		       <form onSubmit={this.onSubmit2} target="infowin">
                        <h3>Pick a chromosome: </h3>
                        <p><select ref='chr' name='chr' onChange={this.onChangeGenome}>{_elements}</select></p>
 		       <p>Then enter coordinates (optional)
-		       <input type='text' ref='start' name='start' onChange={this.onChange} size='50'></input></p>
-		       <p>to
-                       <input type='text' ref='end' name='end' onChange={this.onChange} size='50'></input></p>
-		       <p>The entire chromosome sequence will be displayed if no coordinates are entered.</p>
-		       <p><b>Note</b>: Enter coordinates in ascending order for the Watson strand and descending order for the Crick strand.</p>
-		       { reverseCompNode }
-		       <p><input type="submit" ref='submit2' name='submit2' value="Submit Form" className="button secondary"></input> <input type="reset" ref='reset2' name='reset2' value="Reset Form" className="button secondary"></input></p>
-		       </form>
+		       <input type='text' ref='start' name='start' onChange={this.onChange} size='105'></input>
+		       to
+                       <input type='text' ref='end' name='end' onChange={this.onChange} size='105'></input>
+		       The entire chromosome sequence will be displayed if no coordinates are entered. </p>       
                 </div>);
  		 
 	},
 
-	getSeqNode() {
+	getChrNodeRight() {
+
+		var reverseCompNode = this.getReverseCompNode('rev2');
+
+	        return (<div>
+                       <p><b>Note</b>: Enter coordinates in ascending order for the Watson strand and descending order for the Crick strand.</p>
+                       { reverseCompNode }
+                       <p><input type="submit" ref='submit2' name='submit2' value="Submit Form" className="button secondary"></input> <input type="reset" ref='reset2' name='reset2' value="Reset Form" className="button secondary"></input></p>
+                </div>);
+		  
+	},
+
+	getSeqNodeLeft() {
 
 		var seqtypeNode = this.getSeqtypeNode();
-		var reverseCompNode = this.getReverseCompNode('rev3');
 
 		return(<div>
-		       <form onSubmit={this.onSubmit3} target="infowin">
                        <h3>Type or Paste a: </h3>
 		       { seqtypeNode }
 		       <p>Sequence:
-                       <textarea ref='seq' name='seq' onChange={this.onChange} rows='7' cols='50'></textarea></p>
-                       <p>The sequence <b>MUST</b> be provided in RAW format, no comments (numbers are okay).</p>
-                       { reverseCompNode }
-		       <p><input type="submit" ref='submit3' name='submit3' value="Submit Form" className="button secondary"></input> <input type="reset" ref='reset3' name='reset3' value="Reset Form" className="button secondary"></input></p>
-		       </form>
+                       <textarea ref='seq' name='seq' onChange={this.onChange} rows='3' cols='75'></textarea></p>
                 </div>);    
 
 	},
+
+	getSeqNodeRight() {
+
+		var reverseCompNode = this.getReverseCompNode('rev3');
+
+                return(<div>
+		       <p>The sequence <b>MUST</b> be provided in RAW format, no comments (numbers are okay).</p>
+		       { reverseCompNode }
+		       <p><input type="submit" ref='submit3' name='submit3' value="Submit Form" className="button secondary"></input> <input type="reset" ref='reset3' name='reset3' value="Reset Form" className="button secondary"></input></p>
+                </div>);
+
+        },
 
 	getSeqtypeNode() {
 
@@ -886,12 +1063,17 @@ const GeneSequenceResources = React.createClass({
 
 	getReverseCompNode(name) {
 
-		// <p><input ref={name} name={name} id={name} type="checkbox" value={this.state.rev} onChange={this.onChangeCB}/> Use the reverse complement</p>
+		if (name == 'rev3') {	
+		    return (<div>
+                       	      <p><input ref={name} name={name} id={name} type="checkbox" onChange={this.onChange}/> Use the reverse complement (for DNA sequence only)</p>
+		            </div>);
+		}
+		else {	
+	             return (<div>
+		       	      <p><input ref={name} name={name} id={name} type="checkbox" onChange={this.onChange}/> Use the reverse complement</p> 
+		             </div>);
 
-	        return (<div>
-		       <p><input ref={name} name={name} id={name} type="checkbox" onChange={this.onChange}/> Use the reverse complement</p> 
-		       </div>);
-
+	        }
         },
 
 	getStrainPulldown(strains) {
@@ -961,7 +1143,26 @@ const GeneSequenceResources = React.createClass({
 
 		if (searchType == 'genes') {
 
-		   paramData['genes'] = window.localStorage.getItem("genes");
+		   var more = param['more'];
+		   if (more > 1) {
+		        var displaySet = "";
+			var allGenes = window.localStorage.getItem("allGenes");	
+			console.log("allGenes="+ allGenes);
+			var allGeneList = allGenes.split("|");
+			for (var i = 0; i < allGeneList.length; i++) {
+			    if (i >= (more-1) * MAX_GENE_TO_SHOW && i < more * MAX_GENE_TO_SHOW) {
+			         if (displaySet != "") {
+				      displaySet += "|";
+				 } 
+				 displaySet += allGeneList[i];
+			    }
+			} 
+			window.localStorage.setItem("displaySet", displaySet);
+			paramData['genes'] = displaySet;			
+		   }
+		   else {
+		   	paramData['genes'] = window.localStorage.getItem("genes");
+		   }
 		   paramData['strains'] = window.localStorage.getItem("strains");
 
 		   if (param['up']) {		   
@@ -994,10 +1195,12 @@ const GeneSequenceResources = React.createClass({
 
 		if (searchType == 'seq') {
 		   var seq = param['seq'];
+		   seq = seq.replace(/%0D/g, '');
+		   seq = seq.replace(/%0A/g, '');
 		   seq = seq.toUpperCase().replace(/[^A-Z]/g, '');
 		   paramData['seq'] = seq;
                    paramData['seqtype'] = param['seqtype']
-		   if (param['rev3'] && param['rev3'] == 'on') {
+		   if (paramData['seqtype'] == 'DNA' && param['rev3'] && param['rev3'] == 'on') {
                       paramData['rev'] = 1;
                    }
 		   this.sendRequest(paramData)
@@ -1052,15 +1255,141 @@ const GeneSequenceResources = React.createClass({
 
 	},
 	
-       getDesc4gene(geneList) {
+	getExtraParams(param) {
+
+	     var extraParams = "";
+
+	     if (typeof(param['rev1']) != "undefined") {
+                 extraParams += "&rev1=" + param['rev'];
+             }
+             if (typeof(param['up']) != "undefined") {
+                 extraParams += "&up=" + param['up'];
+             }
+             if (typeof(param['down']) != "undefined") {
+                 extraParams += "&down=" + param['down'];
+             }
+
+	     return extraParams;	     
+
+	},
+
+	getAllDownloadLinks(queryStr) {
+
+	     var genomicFastaUrl = SeqtoolsUrl + "?format=fasta&type=genomic&" + queryStr;
+	     var genomicGcgUrl = SeqtoolsUrl + "?format=gcg&type=genomic&" + queryStr;
+	     var codingFastaUrl = SeqtoolsUrl + "?format=fasta&type=coding&" + queryStr;
+	     var codingGcgUrl = SeqtoolsUrl + "?format=gcg&type=coding&" + queryStr;
+	     var proteinFastaUrl = SeqtoolsUrl + "?format=fasta&type=protein&" + queryStr;
+	     var proteinGcgUrl = SeqtoolsUrl + "?format=gcg&type=protein&" + queryStr;
+
+	     return (<div>
+	     	     <p><span style={ style.textFont }>Download All Sequences: </span>  
+		     <span style={ style.textFont }> <a href={ genomicFastaUrl }>Genomic DNA (.fsa)</a> | <a href={ genomicGcgUrl }>Genomic DNA (.gcg)</a> | <a href={ codingFastaUrl }>Coding DNA (.fsa)</a> | <a href={ codingGcgUrl }>Coding DNA (.gcg)</a> | <a href={ proteinFastaUrl }>Protein (.fsa)</a> | <a href={ proteinGcgUrl }>Protein (.gcg)</a></span></p>
+		     </div>);
+	     
+	},
+
+	getGeneSetLinks() {
+               
+	     var allGenes = window.localStorage.getItem("allGenes");
+	     var allGeneList = allGenes.split("|");
+             if (allGeneList.length <= MAX_GENE_TO_SHOW) {
+	     	   return "";
+	     }
+
+             var param = this.state.param;
+             var rev = param['rev1'];
+             var up = param['up'];
+             var down = param['down'];
+             var more = param['more'];
+
+             var displaySetGenes = window.localStorage.getItem("displaySet");
+             
+             var extraParams = this.getExtraParams(param);
+
+             var moreLinkQueryStr = "genes=" + allGenes;
+             moreLinkQueryStr += "&strains=" + param['strains'];
+             moreLinkQueryStr += extraParams;
+             moreLinkQueryStr += "&submit=Submit+Form";
+             moreLinkQueryStr = moreLinkQueryStr.replace(/ /g, "|");
+             console.log("moreLinkQueryStr="+moreLinkQueryStr);
+
+             var linkCount = allGeneList.length/4;
+             if (allGeneList.length%4 != 0) {
+                  linkCount += 1;
+             }
+
+             var links = "";
+             var prevLink = "";
+             var nextLink = "";
+
+             var index = 1;
+             if (more > 1) {
+                  index = more;
+             }
+             for (var i = 1; i <= linkCount; i++) {
+                  if (links != "") {
+                        links += "&nbsp&nbsp&nbsp&nbsp";
+                  }
+                  if (index == i) {
+                        links += i;
+                        var next = i + 1;
+                        var prev = i - 1;
+                        if (prevLink == "" && i > 1) {
+                            prevLink = "<a href=/seqTools?" + moreLinkQueryStr + "&more=" + prev + ">Previous</a>";
+                        }
+                        if (nextLink == "" && i < linkCount-1) {
+                            nextLink = "<a href=/seqTools?" + moreLinkQueryStr + "&more=" + next + ">Next</a>";
+                        }
+                   }
+                   else {
+                        links += "<a href=/seqTools?" + moreLinkQueryStr + "&more=" + i + ">" + i + "</a>";
+                   }
+             }
+
+             if (prevLink != "") {
+                   links = prevLink + "&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp" + links;
+             }
+             if (nextLink != "") {
+                   links = links + "&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp" + nextLink;
+             }
+
+             // return "<h3><center>Display Gene Sets:&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp" + links + "</center></h3></center>";
+             return "<h3><center>" + links + "</center></h3></center>";
+	},
+
+        getDesc4gene(geneList, genes) {
 
 	     var param = this.state.param;
 	     var rev = param['rev1'];
 	     var up = param['up'];
 	     var down = param['down'];
+	     var more = param['more'];
 
-       	     var text = "The currently selected gene(s)/sequence(s) are ";
+	     var displaySetGenes = window.localStorage.getItem("displaySet");
+
+	     var text = "The currently displayed gene(s)/sequence(s) are ";
+	       
 	     text += "<font color='red'>" + geneList + "</font>";
+	     
+	     var extraParams = this.getExtraParams(param);
+
+	     var pickedSet = displaySetGenes.split('|');
+
+	     if (genes.length < pickedSet.length) {
+	          var noSeqGenes = "";
+		  _.map(pickedSet, gene => {
+		      if (genes.indexOf(gene) < 0) {
+		      	  if (noSeqGenes != "") {
+		 	      noSeqGenes += ", ";
+		 	  }
+		 	  noSeqGenes += gene; 
+		      }
+		  });		 
+		 
+		  text += ". No sequence available for <font color='red'>" + noSeqGenes + "</font> in the selected strain(s) in this gene set.";
+	     }
+	     
 	     if (up && down) {
 	     	  text += " <b>plus " + up + " basepair(s) of upstream sequence and " + down + " basepair(s) of downstream sequence.</b>";
 	     }
@@ -1074,10 +1403,14 @@ const GeneSequenceResources = React.createClass({
 	     text = "<h3>" + text + "</h3>";
 
 	     if (rev == 'on') {
-	     	  text += "<h3><font color='red'>You have selected the reverse complement of this gene/sequence list.</font></h3>";
+	     	  text += "<h2><font color='red'>You have selected the reverse complement of this gene/sequence list.</font></h2>";
 	     }   
 
-	     return text;
+	     var allGenes = window.localStorage.getItem("allGenes");
+
+	     var queryStr = "genes=" + allGenes + "&strains=" + param['strains'] + extraParams;
+
+	     return [text, queryStr];
 
        },
 
@@ -1088,7 +1421,12 @@ const GeneSequenceResources = React.createClass({
 	     var text = "The current selection is: ";
 	     
 	     var num2chrMapping = GSR.NumToRoman();    
-	     text += "<font color='red'>chromosome " + num2chrMapping[chrnum] + " coordinates " + data['start'] + " to " + data['end'] + "</font>";
+	     if (typeof(data['start']) == "undefined") {
+	     	  text += "<font color='red'>chromosome " + num2chrMapping[chrnum] + "</font>";
+	     }
+	     else {
+	     	  text += "<font color='red'>chromosome " + num2chrMapping[chrnum] + " coordinates " + data['start'] + " to " + data['end'] + "</font>";
+             }
 	     text = "<h3>" + text + "</h3>";
 	     
 	     var param = this.state.param;
