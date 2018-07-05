@@ -1007,7 +1007,7 @@ const GeneSequenceResources = React.createClass({
 		       <input type='text' ref='start' name='start' onChange={this.onChange} size='100'></input>
 		       to
                        <input type='text' ref='end' name='end' onChange={this.onChange} size='100'></input>
-		       The entire chromosome sequence will be displayed if no coordinates are entered.</p>       
+		       The entire chromosome sequence will be displayed if no coordinates are entered. &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp</p>       
                 </div>);
  		 
 	},
@@ -1017,7 +1017,7 @@ const GeneSequenceResources = React.createClass({
 		var reverseCompNode = this.getReverseCompNode('rev2');
 
 	        return (<div>
-                       <p><b>Note</b>: Enter coordinates in ascending order for the Watson <br></br>strand and descending order for the Crick strand.</p>
+                       <p><b>Note</b>: Enter coordinates in ascending order for the Watson strand and descending order for the Crick strand.</p>
                        { reverseCompNode }
                        <p><input type="submit" ref='submit2' name='submit2' value="Submit Form" className="button secondary"></input> <input type="reset" ref='reset2' name='reset2' value="Reset Form" className="button secondary"></input></p>
                 </div>);
@@ -1032,7 +1032,7 @@ const GeneSequenceResources = React.createClass({
                        <h3>Type or Paste a: </h3>
 		       { seqtypeNode }
 		       <p>Sequence:
-                       <textarea ref='seq' name='seq' onChange={this.onChange} rows='4' cols='80'></textarea></p>
+                       <textarea ref='seq' name='seq' onChange={this.onChange} rows='4' cols='100'></textarea></p>
                 </div>);    
 
 	},
